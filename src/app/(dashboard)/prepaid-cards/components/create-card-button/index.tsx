@@ -51,7 +51,7 @@ export function CreateCardButton() {
       })
 
       setIsDialogOpen(false);
-    } catch (e) {
+    } catch (_) {
       toast({
         title: "Something went wrong",
         description: "Failed to create the prepaid card template. Please try again later.",

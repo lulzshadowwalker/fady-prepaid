@@ -20,7 +20,7 @@ export default async function middleware(request: NextRequest) {
   try {
     console.log("token", token);
     await authenticate(token);
-  } catch (e) {
+  } catch (_) {
     return redirect(request, "/auth/login");
   }
 
@@ -40,7 +40,7 @@ export default async function middleware(request: NextRequest) {
  * @return {NextResponse} The redirect response.
  */
 function redirect(request: NextRequest, pathname: string): NextResponse {
-  let nextUrl = request.nextUrl;
+  const nextUrl = request.nextUrl;
   nextUrl.pathname = pathname;
 
   return NextResponse.redirect(nextUrl);

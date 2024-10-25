@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sidebar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { LogoutButton } from "./components/logout-button"
+import Config from "@/lib/config"
 
 export function AppSidebar() {
   return (
@@ -41,7 +42,7 @@ export function AppSidebar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  <User2 /> Ahmad Alsayyad
+                  <User2 /> {Config.username.slice(0, 1).toUpperCase() + Config.username.slice(1)}
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
