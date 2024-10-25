@@ -1,12 +1,34 @@
-import Image from "next/image";
-import Link from "next/link";
+"use client";
 
-import { Button } from "@/components/ui/button";
+import Image from "next/image";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import authCover from "@assets/auth-cover.jpg";
+import { FormEvent } from "react";
+import { login } from "@/actions/auth";
+import { SubmitButton } from "./components/submit-button";
+import { toast } from "@/hooks/use-toast";
 
 export default function Login() {
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    const form = new FormData(e.target as HTMLFormElement);
+
+    const response = await login(
+      form.get("username") as string,
+      form.get("password") as string
+    );
+
+    if (response?.errorMessage) {
+      toast({
+        title: "Authentication failed", 
+        description: response?.errorMessage,
+      })
+    }
+  }
+
   return (
     <div className="w-full lg:grid min-h-screen lg:grid-cols-2 content-center lg:content-stretch">
       <div className="flex items-center justify-center py-12 my-auto">
@@ -17,13 +39,14 @@ export default function Login() {
               Enter your email below to login to your account
             </p>
           </div>
-          <div className="grid gap-4">
+          <form onSubmit={onSubmit} className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="username">Username</Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
+                id="username"
+                type="username"
+                name="username"
+                placeholder="johndoe"
                 required
               />
             </div>
@@ -31,12 +54,11 @@ export default function Login() {
               <div className="flex items-center">
                 <Label htmlFor="password">Password</Label>
               </div>
-              <Input id="password" type="password" required />
+              <Input id="password" type="password" placeholder="●●●●●●●●" name="password" required />
             </div>
-            <Button type="submit" className="w-full">
-              Login
-            </Button>
-          </div>
+
+            <SubmitButton />
+          </form>
         </div>
       </div>
       <div className="hidden bg-muted lg:block">
