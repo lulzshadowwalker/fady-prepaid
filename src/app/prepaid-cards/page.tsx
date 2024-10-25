@@ -1,6 +1,5 @@
-import { PlusCircle } from "lucide-react";
 import { CardsTable } from "./components/cards-table";
-import { Button } from "@/components/ui/button";
+import { CreateCardButton } from "./components/create-card-button";
 
 export default function PrepaidCards() {
   return <div>
@@ -13,7 +12,7 @@ export default function PrepaidCards() {
       </p>
     </section>
 
-    <Button className="mt-8 ms-auto flex max-sm:w-full">Create <PlusCircle /></Button>
+    <CreateCardButton />
 
     <CardsTable />
   </div>
