@@ -17,6 +17,8 @@ import { useForm } from "react-hook-form"
 import { toast } from "@/hooks/use-toast"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { usePrepaidCardTemplate } from "@/context/PrepaidCardTemplateContext";
+import { useState } from "react";
 
 const FormSchema = z.object({
   name: z.string().optional(),
@@ -24,6 +26,8 @@ const FormSchema = z.object({
 })
 
 export function CreateCardButton() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -32,19 +36,32 @@ export function CreateCardButton() {
     },
   })
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    })
+  const createTemplate = usePrepaidCardTemplate().create;
+
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    try {
+      await createTemplate({
+        name: data.name ?? "None",
+        amount: data.amount.toString(),
+      });
+
+      toast({
+        title: "Prepaid card template created successfully",
+        description: "You can now print this card and use it to add money to your account.",
+      })
+
+      setIsDialogOpen(false);
+    } catch (e) {
+      toast({
+        title: "Something went wrong",
+        description: "Failed to create the prepaid card template. Please try again later.",
+        variant: "destructive"
+      })
+    }
   }
 
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
         <Button className="mt-8 ms-auto flex max-sm:w-full">Create <PlusCircle /></Button>
       </DialogTrigger>
