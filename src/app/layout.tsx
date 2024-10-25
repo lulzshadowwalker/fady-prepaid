@@ -2,10 +2,8 @@ import "reflect-metadata";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
 import { Toaster } from "@/components/ui/toaster";
-import "@/lib/container"
+import "@/lib/container";
 import { PrepaidCardTemplateProvider } from "@/context/PrepaidCardTemplateContext";
 
 const geistSans = localFont({
@@ -35,16 +33,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <PrepaidCardTemplateProvider>
-          <SidebarProvider>
-            <AppSidebar />
-            <main className="w-full">
-              <SidebarTrigger />
-              <div className="max-w-screen-xl mx-auto p-8">
-                {children}
-              </div>
-            </main>
-            <Toaster />
-          </SidebarProvider>
+          {children}
+          <Toaster />
         </PrepaidCardTemplateProvider>
       </body>
     </html>
