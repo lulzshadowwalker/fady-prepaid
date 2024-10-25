@@ -63,6 +63,17 @@ export async function login(username: string, password: string) {
   redirect("/");
 }
 
+/**
+ * Logs the user out and removes the access token from the cookie.
+ * Redirects the user to the login page.
+ */
+export async function logout() {
+  const store = await cookies();
+  store.delete("fady-access-token");
+
+  redirect("/auth/login");
+} 
+
 export async function forbidden() {
   throw new Forbidden("Forbidden");
 }

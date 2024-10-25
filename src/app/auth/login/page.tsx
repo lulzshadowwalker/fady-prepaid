@@ -11,7 +11,7 @@ import { SubmitButton } from "./components/submit-button";
 import { toast } from "@/hooks/use-toast";
 
 export default function Login() {
-  async function onSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const form = new FormData(e.target as HTMLFormElement);
@@ -39,7 +39,7 @@ export default function Login() {
               Enter your email below to login to your account
             </p>
           </div>
-          <form onSubmit={onSubmit} className="grid gap-4">
+          <form onSubmit={handleSubmit} className="grid gap-4">
             <div className="grid gap-2">
               <Label htmlFor="username">Username</Label>
               <Input
