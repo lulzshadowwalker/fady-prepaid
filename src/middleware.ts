@@ -18,7 +18,6 @@ export default async function middleware(request: NextRequest) {
 
   //  NOTE: Redirect the user to the login page if they're not authenticated
   try {
-    console.log("token", token);
     await authenticate(token);
   } catch (_) {
     return redirect(request, "/auth/login");

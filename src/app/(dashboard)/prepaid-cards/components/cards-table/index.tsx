@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import "reflect-metadata"
-import { formatDistanceToNow } from 'date-fns';
-import * as React from "react"
+import "reflect-metadata";
+import { formatDistanceToNow } from "date-fns";
+import * as React from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -14,10 +14,15 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
-import { ChevronDown, EyeIcon, MoreHorizontal, PrinterIcon } from "lucide-react"
+} from "@tanstack/react-table";
+import {
+  ChevronDown,
+  EyeIcon,
+  MoreHorizontal,
+  PrinterIcon,
+} from "lucide-react";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -26,8 +31,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -35,9 +40,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { PrepaidCardTemplate } from "@/lib/types"
-import { usePrepaidCardTemplate } from "@/context/PrepaidCardTemplateContext"
+} from "@/components/ui/table";
+import { PrepaidCardTemplate } from "@/lib/types";
+import { usePrepaidCardTemplate } from "@/context/PrepaidCardTemplateContext";
 
 export const columns: ColumnDef<PrepaidCardTemplate>[] = [
   {
@@ -49,14 +54,28 @@ export const columns: ColumnDef<PrepaidCardTemplate>[] = [
     accessorKey: "amount",
     header: () => <div className="text-start">Amount</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"))
+      const amount = parseFloat(row.getValue("amount"));
 
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "JOD",
-      }).format(amount)
+      }).format(amount);
 
-      return <div className="text-start font-medium">{formatted}</div>
+      return <div className="text-start font-medium">{formatted}</div>;
+    },
+  },
+  {
+    accessorKey: "price",
+    header: () => <div className="text-start">Price</div>,
+    cell: ({ row }) => {
+      const price = parseFloat(row.getValue("price"));
+
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "JOD",
+      }).format(price);
+
+      return <div className="text-start font-medium">{formatted}</div>;
     },
   },
   {
@@ -70,14 +89,16 @@ export const columns: ColumnDef<PrepaidCardTemplate>[] = [
     accessorKey: "createdAt",
     header: "Date Created",
     cell: ({ row }) => (
-      <time>{formatDistanceToNow(row.getValue("createdAt"), { addSuffix: true })}</time>
+      <time>
+        {formatDistanceToNow(row.getValue("createdAt"), { addSuffix: true })}
+      </time>
     ),
   },
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const template = row.original
+      const template = row.original;
 
       return (
         <DropdownMenu>
@@ -92,25 +113,29 @@ export const columns: ColumnDef<PrepaidCardTemplate>[] = [
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(template.id)}
             >
-              <PrinterIcon />  Print
+              <PrinterIcon /> Print
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem><EyeIcon /> View</DropdownMenuItem>
+            <DropdownMenuItem>
+              <EyeIcon /> View
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      );
     },
   },
-]
+];
 
 export function CardsTable() {
-  const [sorting, setSorting] = React.useState<SortingState>([{ id: "createdAt", desc: true }])
+  const [sorting, setSorting] = React.useState<SortingState>([
+    { id: "createdAt", desc: true },
+  ]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
-  )
+  );
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
+    React.useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = React.useState({});
   const templates = usePrepaidCardTemplate().templates;
 
   const table = useReactTable({
@@ -130,7 +155,7 @@ export function CardsTable() {
       columnVisibility,
       rowSelection,
     },
-  })
+  });
 
   return (
     <div className="w-full">
@@ -165,7 +190,7 @@ export function CardsTable() {
                   >
                     {column.id}
                   </DropdownMenuCheckboxItem>
-                )
+                );
               })}
           </DropdownMenuContent>
         </DropdownMenu>
@@ -181,11 +206,11 @@ export function CardsTable() {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -245,6 +270,5 @@ export function CardsTable() {
         </div>
       </div>
     </div>
-  )
+  );
 }
-
