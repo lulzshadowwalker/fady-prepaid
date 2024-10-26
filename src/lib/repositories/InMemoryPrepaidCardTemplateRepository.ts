@@ -36,6 +36,21 @@ export class InMemoryPrepaidCardTemplateRepository
     return Array.from(this.templates);
   }
 
+  async update(
+    template: PrepaidCardTemplate,
+    updated: Partial<PrepaidCardTemplate>
+  ): Promise<PrepaidCardTemplate> {
+    const t = this.templates.find((t) => t.id === template.id);
+
+    if (!t) {
+      throw new Error("Template not found");
+    }
+
+    Object.assign(t, updated);
+
+    return t;
+  }
+
   private factory(count: number = 1): PrepaidCardTemplate[] {
     return Array.from({ length: count }, () => {
       return {

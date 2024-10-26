@@ -11,4 +11,8 @@ export interface PrepaidCardTemplateRepository {
     template: CreatePrepaidCardTemplateParams
   ): Promise<PrepaidCardTemplate>;
   getAll(): Promise<PrepaidCardTemplate[]>;
+  update(
+    template: PrepaidCardTemplate,
+    updated: Partial<PrepaidCardTemplate>
+  ): Promise<PrepaidCardTemplate>;
 }

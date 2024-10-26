@@ -16,10 +16,12 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import {
+  CheckCircle,
   ChevronDown,
   EyeIcon,
   MoreHorizontal,
   PrinterIcon,
+  XCircle,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -43,6 +45,7 @@ import {
 } from "@/components/ui/table";
 import { PrepaidCardTemplate } from "@/lib/types";
 import { usePrepaidCardTemplate } from "@/context/PrepaidCardTemplateContext";
+import { Badge } from "@/components/ui/badge";
 
 export const columns: ColumnDef<PrepaidCardTemplate>[] = [
   {
@@ -82,7 +85,12 @@ export const columns: ColumnDef<PrepaidCardTemplate>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
+      <Badge
+        className="capitalize"
+        variant={row.getValue("status") === "active" ? "default" : "secondary"}
+      >
+        {row.getValue("status")}
+      </Badge>
     ),
   },
   {
@@ -99,6 +107,7 @@ export const columns: ColumnDef<PrepaidCardTemplate>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const template = row.original;
+      const isActive = row.getValue("status") === "active";
 
       return (
         <DropdownMenu>
@@ -112,6 +121,7 @@ export const columns: ColumnDef<PrepaidCardTemplate>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(template.id)}
+              disabled={!isActive}
             >
               <PrinterIcon /> Print
             </DropdownMenuItem>
@@ -119,6 +129,13 @@ export const columns: ColumnDef<PrepaidCardTemplate>[] = [
             <DropdownMenuItem>
               <EyeIcon /> View
             </DropdownMenuItem>
+            <DropdownMenuSeparator />
+
+            {isActive ? (
+              <DeactivateMenuItem template={template} />
+            ) : (
+              <ActivateMenuItem template={template} />
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -270,5 +287,28 @@ export function CardsTable() {
         </div>
       </div>
     </div>
+  );
+}
+
+function ActivateMenuItem({ template }: { template: PrepaidCardTemplate }) {
+  const activate = usePrepaidCardTemplate().activate;
+
+  return (
+    <DropdownMenuItem onClick={() => activate(template)}>
+      <CheckCircle /> Activate
+    </DropdownMenuItem>
+  );
+}
+
+function DeactivateMenuItem({ template }: { template: PrepaidCardTemplate }) {
+  const deactivate = usePrepaidCardTemplate().deactivate;
+
+  return (
+    <DropdownMenuItem
+      onClick={() => deactivate(template)}
+      className="min-w-fitt"
+    >
+      <XCircle /> Deactivate
+    </DropdownMenuItem>
   );
 }

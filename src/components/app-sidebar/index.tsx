@@ -1,4 +1,4 @@
-import { ChevronUp, CreditCard, User2 } from "lucide-react"
+import { ChevronUp, CreditCard, User2 } from "lucide-react";
 
 import {
   Sidebar,
@@ -10,10 +10,15 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { LogoutButton } from "./components/logout-button"
-import Config from "@/lib/config"
+} from "@/components/ui/sidebar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { LogoutButton } from "./components/logout-button";
+import Config from "@/lib/config";
 
 export function AppSidebar() {
   return (
@@ -42,7 +47,8 @@ export function AppSidebar() {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton>
-                  <User2 /> {Config.username.slice(0, 1).toUpperCase() + Config.username.slice(1)}
+                  <User2 />{" "}
+                  <span className="capitalize">{Config.username}</span>
                   <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
@@ -59,5 +65,5 @@ export function AppSidebar() {
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
