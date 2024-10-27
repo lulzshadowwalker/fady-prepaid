@@ -21,7 +21,8 @@
     "paths": {
       "@/*": ["./src/*"],
       "@types": ["./src/lib/types.ts"],
-      "@assets/*": ["./src/assets/images/*"],
+      "@contracts/*": ["./src/lib/contracts/*"],
+      "@assets/*": ["./src/assets/images/*"]
     },
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
