@@ -1,64 +1,80 @@
-"use client";
+'use client';
 
-import { prepaidCardTemplateRepository } from "@/lib/container";
-import { CreatePrepaidCardTemplateParams } from "@/lib/contracts/prepaid-card-template-repository";
-import { PrepaidCardTemplate } from "@/lib/types";
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  activatePrepaidCardTemplate,
+  createPrepaidCardTemplate,
+  deactivatePrepaidCardTemplate,
+  getPrepaidCardTemplates,
+} from '@/actions/prepaid-card-templates';
+import { toast } from '@/hooks/use-toast';
+import { CreatePrepaidCardTemplateParams } from '@/lib/contracts/prepaid-card-template-repository';
+import { FirebasePrepaidCardTemplateRepository } from '@/lib/repositories/FirebasePrepaidCardTemplateRepository';
+import { PrepaidCardTemplate } from '@/lib/types';
+import { set } from 'date-fns';
+import { createContext, useContext, useEffect, useState } from 'react';
 
 type State = {
   templates: PrepaidCardTemplate[];
 };
 
 type Actions = {
-  create: (
-    template: CreatePrepaidCardTemplateParams
-  ) => Promise<PrepaidCardTemplate>;
+  create: (template: CreatePrepaidCardTemplateParams) => Promise<PrepaidCardTemplate>;
   activate: (template: PrepaidCardTemplate) => Promise<PrepaidCardTemplate>;
   deactivate: (template: PrepaidCardTemplate) => Promise<PrepaidCardTemplate>;
 };
 
-const PrepaidCardTemplateContext = createContext<(State & Actions) | null>(
-  null
-);
+const PrepaidCardTemplateContext = createContext<(State & Actions) | null>(null);
 
-const repository = prepaidCardTemplateRepository();
-
-export function PrepaidCardTemplateProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function PrepaidCardTemplateProvider({ children }: { children: React.ReactNode }) {
   const [templates, setTemplates] = useState<PrepaidCardTemplate[]>([]);
 
   useEffect(() => {
-    repository.getAll().then(setTemplates);
+    getPrepaidCardTemplates().then(setTemplates);
   }, []);
 
-  async function create(
-    template: CreatePrepaidCardTemplateParams
-  ): Promise<PrepaidCardTemplate> {
-    const t = await repository.create(template);
+  async function create(template: CreatePrepaidCardTemplateParams): Promise<PrepaidCardTemplate> {
+    const t = await createPrepaidCardTemplate(template);
     setTemplates((templates) => [...templates, t]);
 
     return t;
   }
 
-  async function activate(template: PrepaidCardTemplate) {
-    const t = await repository.update(template, { status: "active" });
-    setTemplates((templates) =>
-      templates.map((t) => (t.id === template.id ? template : t))
-    );
+  async function activate(template: PrepaidCardTemplate): Promise<PrepaidCardTemplate> {
+    try {
+      const t = await activatePrepaidCardTemplate(template);
 
-    return t;
+      setTemplates((templates) => templates.map((template) => (template.id === t.id ? t : template)));
+
+      toast({ title: 'Template activated successfully' });
+
+      return t;
+    } catch (e) {
+      toast({
+        title: 'Failed to activate template',
+        variant: 'destructive',
+      });
+
+      return template;
+    }
   }
 
-  async function deactivate(template: PrepaidCardTemplate) {
-    const t = await repository.update(template, { status: "inactive" });
-    setTemplates((templates) =>
-      templates.map((t) => (t.id === template.id ? template : t))
-    );
+  async function deactivate(template: PrepaidCardTemplate): Promise<PrepaidCardTemplate> {
+    try {
+      const t = await deactivatePrepaidCardTemplate(template);
 
-    return t;
+      setTemplates((templates) => templates.map((template) => (template.id === t.id ? t : template)));
+
+      toast({ title: 'Template deactivated successfully' });
+
+      return t;
+    } catch (e) {
+      toast({
+        title: 'Failed to deactivate template',
+        variant: 'destructive',
+      });
+
+      return template;
+    }
   }
 
   return (
@@ -79,9 +95,7 @@ export function usePrepaidCardTemplate(): State & Actions {
   const context = useContext(PrepaidCardTemplateContext);
 
   if (!context) {
-    throw new Error(
-      "usePrepaidCardTemplate must be used within a PrepaidCardTemplateProvider"
-    );
+    throw new Error('usePrepaidCardTemplate must be used within a PrepaidCardTemplateProvider');
   }
 
   return context;
