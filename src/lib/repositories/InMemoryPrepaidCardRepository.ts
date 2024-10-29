@@ -1,6 +1,7 @@
 import { CreatePreapidCardParams, PrepaidCardRepository } from '@/lib/contracts/prepaid-card-repository';
 import { PrepaidCard } from '../types';
 import { faker } from '@faker-js/faker';
+import { generateRedemptionCode } from '../utils';
 
 export class InMemoryPrepaidCardRepository implements PrepaidCardRepository {
   private cards: PrepaidCard[] = [];
@@ -10,7 +11,7 @@ export class InMemoryPrepaidCardRepository implements PrepaidCardRepository {
       id: faker.string.uuid(),
       templateId: data.template.id,
       template: data.template,
-      redemptionCode: `${data.template.amount}-${faker.string.uuid().slice(0, 8)}`,
+      redemptionCode: generateRedemptionCode(),
       amount: data.template.amount,
       price: data.template.price,
       status: 'active',
