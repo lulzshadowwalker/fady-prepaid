@@ -31,7 +31,7 @@ type Props = {
 
 const FormSchema = z.object({
   count: z.coerce.number().int().positive(),
-  seller: z.string().optional(),
+  seller: z.string(),
 });
 
 export function PrintMenuItem({ template, disabled }: Props) {
@@ -96,11 +96,9 @@ export function PrintMenuItem({ template, disabled }: Props) {
                 <FormItem>
                   <FormLabel>Seller</FormLabel>
                   <FormControl>
-                    <Input placeholder='Enter seller’s name' {...field} />
+                    <Input placeholder='Enter seller’s name' {...field} required />
                   </FormControl>
-                  <FormDescription>
-                    Specify the seller or distribution point for tracking purposes. (optional)
-                  </FormDescription>
+                  <FormDescription>Specify the seller or distribution point for tracking purposes.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -113,7 +111,7 @@ export function PrintMenuItem({ template, disabled }: Props) {
                 <FormItem>
                   <FormLabel>Number of Cards to Generate</FormLabel>
                   <FormControl>
-                    <Input placeholder='e.g. 50' {...field} />
+                    <Input placeholder='e.g. 50' {...field} required />
                   </FormControl>
                   <FormDescription>
                     Enter the number of cards you want to generate. Each card will have a unique redemption code.

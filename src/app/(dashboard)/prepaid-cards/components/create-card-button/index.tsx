@@ -21,7 +21,7 @@ import { usePrepaidCardTemplate } from '@/context/prepaid-card-template-context'
 import { useState } from 'react';
 
 const FormSchema = z.object({
-  name: z.string().optional(),
+  name: z.string(),
   amount: z.coerce.number().int().positive(),
   price: z.coerce.number().int().positive(),
 });
@@ -81,7 +81,7 @@ export function CreateCardButton() {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder='Friendly name' {...field} />
+                    <Input placeholder='Friendly name' {...field} required />
                   </FormControl>
                   <FormDescription>A friendly name to help you identify this card.</FormDescription>
                   <FormMessage />
