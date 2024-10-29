@@ -30,7 +30,7 @@ type Props = {
 };
 
 const FormSchema = z.object({
-  count: z.coerce.number().int().positive(),
+  count: z.coerce.number({ message: 'Count must be a positive integer' }).int().positive(),
   seller: z.string(),
 });
 

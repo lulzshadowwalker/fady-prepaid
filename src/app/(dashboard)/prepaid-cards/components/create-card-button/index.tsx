@@ -22,8 +22,8 @@ import { useState } from 'react';
 
 const FormSchema = z.object({
   name: z.string(),
-  amount: z.coerce.number().int().positive(),
-  price: z.coerce.number().int().positive(),
+  amount: z.coerce.number({ message: 'Amount must be a positive integer' }).int().positive(),
+  price: z.coerce.number({ message: 'Price must be a positive integer' }).int().positive(),
 });
 
 export function CreateCardButton() {
