@@ -1,16 +1,17 @@
-import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
-import { authenticate } from "@/actions/auth";
+import { cookies } from 'next/headers';
+import { NextRequest, NextResponse } from 'next/server';
+import { authenticate, logout, softLogout } from '@/actions/auth';
+import { TokenExpired } from './lib/auth';
 
 export default async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  const token = (await cookies()).get("fady-access-token")?.value;
+  const token = (await cookies()).get('fady-access-token')?.value;
 
   //  NOTE: Redirect the user to the home page if they're authenticated
-  if (pathname.includes("auth")) {
+  if (pathname.includes('auth')) {
     if (token) {
-      return redirect(request, "/");
+      return redirect(request, '/');
     }
 
     return NextResponse.next();
@@ -19,16 +20,21 @@ export default async function middleware(request: NextRequest) {
   //  NOTE: Redirect the user to the login page if they're not authenticated
   try {
     await authenticate(token);
-  } catch (_) {
-    return redirect(request, "/auth/login");
+  } catch (e) {
+    if (e instanceof TokenExpired) {
+      await softLogout();
+      return redirect(request, '/auth/login');
+    }
+
+    return redirect(request, '/auth/login');
   }
 
-  //  NOTE: Since we only have a single page in this dashboard so far, we redirect the user to the prepaid cards page 
-  if (pathname === "/") {
-    return redirect(request, "/prepaid-cards");
+  //  NOTE: Since we only have a single page in this dashboard so far, we redirect the user to the prepaid cards page
+  if (pathname === '/') {
+    return redirect(request, '/prepaid-cards');
   }
 
-  return NextResponse.next()
+  return NextResponse.next();
 }
 
 /**
@@ -56,4 +62,4 @@ export const config = {
      */
     '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
   ],
-}
+};
