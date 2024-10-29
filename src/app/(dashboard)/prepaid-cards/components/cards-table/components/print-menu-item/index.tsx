@@ -70,8 +70,13 @@ export function PrintMenuItem({ template, disabled }: Props) {
     }
   }
 
+  function handleOnOpenChange(open: boolean): void {
+    setIsDialogOpen(open);
+    form.reset();
+  }
+
   return (
-    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+    <Dialog open={isDialogOpen} onOpenChange={handleOnOpenChange}>
       <DialogTrigger asChild>
         <DropdownMenuItem disabled={disabled} onSelect={(e) => e.preventDefault()}>
           <PrinterIcon /> Print

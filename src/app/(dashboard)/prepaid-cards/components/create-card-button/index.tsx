@@ -59,8 +59,13 @@ export function CreateCardButton() {
     }
   }
 
+  function handleOnOpenChange(open: boolean): void {
+    setIsDialogOpen(open);
+    form.reset();
+  }
+
   return (
-    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+    <Dialog open={isDialogOpen} onOpenChange={handleOnOpenChange}>
       <DialogTrigger asChild>
         <Button className='mt-8 ms-auto flex max-sm:w-full'>
           Create <PlusCircle />
@@ -96,7 +101,7 @@ export function CreateCardButton() {
                 <FormItem>
                   <FormLabel>Amount</FormLabel>
                   <FormControl>
-                    <Input placeholder='55 JOD' {...field} />
+                    <Input placeholder='55 JOD' {...field} required />
                   </FormControl>
                   <FormDescription>The amount of money to add to this card</FormDescription>
                   <FormMessage />
@@ -111,7 +116,7 @@ export function CreateCardButton() {
                 <FormItem>
                   <FormLabel>Price</FormLabel>
                   <FormControl>
-                    <Input placeholder='50 JOD' {...field} />
+                    <Input placeholder='50 JOD' {...field} required />
                   </FormControl>
                   <FormDescription>The retail price the customer will pay</FormDescription>
                   <FormMessage />
