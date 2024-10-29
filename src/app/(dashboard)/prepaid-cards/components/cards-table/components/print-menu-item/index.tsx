@@ -21,7 +21,7 @@ import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { toast } from '@/hooks/use-toast';
 import { PrepaidCardTemplate } from '@/lib/types';
 import { PrinterIcon } from 'lucide-react';
-import { usePrepaidCard } from '@/context/PrepaidCardContext';
+import { usePrepaidCard } from '@/context/prepaid-card-context';
 import { CsvExporter } from '@/lib/services/csv-exporter';
 
 type Props = {

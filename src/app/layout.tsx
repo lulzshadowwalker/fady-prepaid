@@ -4,8 +4,8 @@ import localFont from 'next/font/local';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import '@/lib/container';
-import { PrepaidCardTemplateProvider } from '@/context/PrepaidCardTemplateContext';
-import { PrepaidCardProvider } from '@/context/PrepaidCardContext';
+import { PrepaidCardTemplateProvider } from '@/context/prepaid-card-template-context';
+import { PrepaidCardProvider } from '@/context/prepaid-card-context';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',

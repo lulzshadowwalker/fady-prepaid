@@ -6,6 +6,7 @@ import { PrepaidCardTemplateRepository } from '@/lib/contracts/prepaid-card-temp
 import { FirebasePrepaidCardTemplateRepository } from '@/lib/repositories/FirebasePrepaidCardTemplateRepository';
 import { PrepaidCardRepository } from '@/lib/contracts/prepaid-card-repository';
 import { InMemoryPrepaidCardRepository } from './repositories/InMemoryPrepaidCardRepository';
+import { FirebasePrepaidCardRepository } from './repositories/FirebasePrepaidCardRepository';
 
 const PREPAID_CARD_TEMPLATE_REPOSITORY = 'PREPAID_CARD_TEMPLATE_REPOSITORY';
 
@@ -20,7 +21,8 @@ export const prepaidCardTemplateRepository = () =>
 const PREPAID_CARD_REPOSITORY = 'PREPAID_CARD_REPOSITORY';
 
 container.register<PrepaidCardRepository>(PREPAID_CARD_REPOSITORY, {
-  useClass: InMemoryPrepaidCardRepository,
+  // useClass: InMemoryPrepaidCardRepository,
+  useClass: FirebasePrepaidCardRepository,
 });
 
 export const prepaidCardRepository = () => container.resolve<PrepaidCardRepository>(PREPAID_CARD_REPOSITORY);

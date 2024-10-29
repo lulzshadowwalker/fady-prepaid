@@ -3,8 +3,9 @@ import {
   CreatePrepaidCardTemplateParams,
   PrepaidCardTemplateRepository,
 } from '@/lib/contracts/prepaid-card-template-repository';
-import { PrepaidCardTemplate } from '../types';
+import { PrepaidCardTemplate } from '@/lib/types';
 import { firestore } from '@/lib/firebase';
+import { PrepeaidCardTemplateConverter } from '../converter/prepaid-card-template-converter';
 
 export class FirebasePrepaidCardTemplateRepository implements PrepaidCardTemplateRepository {
   private collectionName = 'prepaid_card_templates';
@@ -18,31 +19,18 @@ export class FirebasePrepaidCardTemplateRepository implements PrepaidCardTemplat
       created_at: new Date().toISOString(),
     });
 
-    return this.templateFromDoc(await getDoc(ref));
+    return PrepeaidCardTemplateConverter.fromFirestore(await getDoc(ref));
   }
 
   async getAll(): Promise<PrepaidCardTemplate[]> {
     const snapshot = await getDocs(collection(firestore, this.collectionName));
-    return snapshot.docs.map(this.templateFromDoc);
+    return snapshot.docs.map(PrepeaidCardTemplateConverter.fromFirestore);
   }
 
   async update(template: PrepaidCardTemplate, updated: Partial<PrepaidCardTemplate>): Promise<PrepaidCardTemplate> {
     const ref = doc(firestore, this.collectionName, template.id);
     await updateDoc(ref, updated);
 
-    return this.templateFromDoc(await getDoc(ref));
-  }
-
-  protected templateFromDoc(doc: DocumentSnapshot): PrepaidCardTemplate {
-    const data = doc.data();
-
-    return {
-      id: doc.id,
-      amount: data?.amount,
-      price: data?.price,
-      name: data?.name,
-      status: data?.status,
-      createdAt: data?.created_at,
-    };
+    return PrepeaidCardTemplateConverter.fromFirestore(await getDoc(ref));
   }
 }

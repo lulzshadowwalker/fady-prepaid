@@ -31,7 +31,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { PrepaidCardTemplate } from '@/lib/types';
-import { usePrepaidCardTemplate } from '@/context/PrepaidCardTemplateContext';
+import { usePrepaidCardTemplate } from '@/context/prepaid-card-template-context';
 import { Badge } from '@/components/ui/badge';
 
 export const columns: ColumnDef<PrepaidCardTemplate>[] = [

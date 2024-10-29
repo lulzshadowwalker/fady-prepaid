@@ -9,6 +9,7 @@ export type PrepaidCardTemplate = {
 
 export type PrepaidCard = {
   id: string;
+  batchId: string;
   templateId: string;
   template: PrepaidCardTemplate;
   redemptionCode: string;

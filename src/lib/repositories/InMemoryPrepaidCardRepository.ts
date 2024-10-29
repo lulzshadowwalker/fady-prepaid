@@ -7,8 +7,11 @@ export class InMemoryPrepaidCardRepository implements PrepaidCardRepository {
   private cards: PrepaidCard[] = [];
 
   async createMany(data: CreatePreapidCardParams): Promise<PrepaidCard[]> {
+    const batchId = faker.string.uuid();
+
     const cards: PrepaidCard[] = Array.from({ length: data.count }, (_, i) => ({
       id: faker.string.uuid(),
+      batchId: batchId,
       templateId: data.template.id,
       template: data.template,
       redemptionCode: generateRedemptionCode(),
