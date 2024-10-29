@@ -25,7 +25,13 @@ export class CsvExporter implements Exporter<object> {
       throw new Error('Invalid data format.');
     }
 
-    const headers = Object.keys(data[0]).join(',');
+    // Convert camelCase header keys to "Column Name" format
+    const formatHeader = (key: string) => key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase());
+
+    const headers = Object.keys(data[0])
+      .map((key) => formatHeader(key))
+      .join(',');
+
     const rows = data
       .map((obj) =>
         Object.values(obj)
