@@ -53,7 +53,13 @@ export function PrintMenuItem({ template, disabled }: Props) {
       });
 
       const exporter = new CsvExporter();
-      exporter.filename(`${template.amount} JOD - ${data.seller ?? 'cards'} - ${now()}`).export(cards);
+      const date = new Date();
+      const formattedDate = date.toISOString().slice(0, 10); // YYYY-MM-DD
+      const formattedTime = date.toTimeString().slice(0, 5); // HH:MM
+
+      exporter
+        .filename(`${data.count}x${template.amount}JOD ${data.seller} ${formattedDate} ${formattedTime}.csv`)
+        .export(cards);
 
       toast({
         title: `${data.count} prepaid cards created successfully`,
@@ -133,15 +139,4 @@ export function PrintMenuItem({ template, disabled }: Props) {
       </DialogContent>
     </Dialog>
   );
-}
-
-function now(): string {
-  const date = new Date();
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-
-  return `${year}-${month}-${day} ${hours}:${minutes}`;
 }
