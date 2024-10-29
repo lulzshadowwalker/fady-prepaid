@@ -8,9 +8,7 @@ import {
 } from '@/actions/prepaid-card-templates';
 import { toast } from '@/hooks/use-toast';
 import { CreatePrepaidCardTemplateParams } from '@/lib/contracts/prepaid-card-template-repository';
-import { FirebasePrepaidCardTemplateRepository } from '@/lib/repositories/FirebasePrepaidCardTemplateRepository';
 import { PrepaidCardTemplate } from '@/lib/types';
-import { set } from 'date-fns';
 import { createContext, useContext, useEffect, useState } from 'react';
 
 type State = {

@@ -1,9 +1,11 @@
 import 'reflect-metadata';
 
 import { container } from 'tsyringe';
-import { InMemoryPrepaidCardTemplateRepository } from './repositories/InMemoryPrepaidCardTemplateRepository';
-import { PrepaidCardTemplateRepository } from './contracts/prepaid-card-template-repository';
-import { FirebasePrepaidCardTemplateRepository } from './repositories/FirebasePrepaidCardTemplateRepository';
+import { InMemoryPrepaidCardTemplateRepository } from '@/lib/repositories/InMemoryPrepaidCardTemplateRepository';
+import { PrepaidCardTemplateRepository } from '@/lib/contracts/prepaid-card-template-repository';
+import { FirebasePrepaidCardTemplateRepository } from '@/lib/repositories/FirebasePrepaidCardTemplateRepository';
+import { PrepaidCardRepository } from '@/lib/contracts/prepaid-card-repository';
+import { InMemoryPrepaidCardRepository } from './repositories/InMemoryPrepaidCardRepository';
 
 const PREPAID_CARD_TEMPLATE_REPOSITORY = 'PREPAID_CARD_TEMPLATE_REPOSITORY';
 
@@ -14,3 +16,11 @@ container.register<PrepaidCardTemplateRepository>(PREPAID_CARD_TEMPLATE_REPOSITO
 
 export const prepaidCardTemplateRepository = () =>
   container.resolve<PrepaidCardTemplateRepository>(PREPAID_CARD_TEMPLATE_REPOSITORY);
+
+const PREPAID_CARD_REPOSITORY = 'PREPAID_CARD_REPOSITORY';
+
+container.register<PrepaidCardRepository>(PREPAID_CARD_REPOSITORY, {
+  useClass: InMemoryPrepaidCardRepository,
+});
+
+export const prepaidCardRepository = () => container.resolve<PrepaidCardRepository>(PREPAID_CARD_REPOSITORY);

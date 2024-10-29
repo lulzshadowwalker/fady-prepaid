@@ -56,7 +56,6 @@ export class CsvExporter implements Exporter<object> {
     link.click();
     document.body.removeChild(link);
 
-    // Release the object URL
     URL.revokeObjectURL(url);
   }
 

@@ -15,6 +15,6 @@ export type PrepaidCard = {
   amount: string;
   price: string;
   status: 'active' | 'redeemed';
-  createdAt: string; // Timestamp when the card instance was created
+  createdAt: string;
   seller?: string;
 };
