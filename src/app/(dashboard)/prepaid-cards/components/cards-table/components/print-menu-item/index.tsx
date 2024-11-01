@@ -59,7 +59,12 @@ export function PrintMenuItem({ template, disabled }: Props) {
 
       exporter
         .filename(`${data.count}x${template.amount}JOD ${data.seller} ${formattedDate} ${formattedTime}.csv`)
-        .export(cards);
+        .export(
+          cards.map((card) => {
+            const { template, ...rest } = card;
+            return rest;
+          })
+        );
 
       toast({
         title: `${data.count} prepaid cards created successfully`,
