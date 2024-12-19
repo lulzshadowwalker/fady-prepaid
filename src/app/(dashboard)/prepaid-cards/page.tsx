@@ -1,5 +1,8 @@
+import { Metadata } from 'next';
 import { CardsTable } from './components/cards-table';
 import { CreateCardButton } from './components/create-card-button';
+
+export const metadata: Metadata = { title: 'Prepaid Cards | Fady' };
 
 export default function PrepaidCards() {
   return (
