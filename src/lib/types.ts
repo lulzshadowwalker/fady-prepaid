@@ -3,7 +3,7 @@ export type PrepaidCardTemplate = {
   amount: string;
   price: string;
   name: string;
-  status: 'active' | 'inactive';
+  status: "active" | "inactive";
   createdAt: string;
 };
 
@@ -15,7 +15,16 @@ export type PrepaidCard = {
   redemptionCode: string;
   amount: string;
   price: string;
-  status: 'active' | 'redeemed';
+  status: "active" | "redeemed";
   createdAt: string;
   seller?: string;
+};
+
+export type Batch = {
+  id: string;
+  cards: PrepaidCard[];
+  templateId: string;
+  template: PrepaidCardTemplate;
+  createdAt: string;
+  seller: string;
 };

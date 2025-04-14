@@ -51,7 +51,7 @@ export class InMemoryPrepaidCardTemplateRepository
     return t;
   }
 
-  private factory(count: number = 1): PrepaidCardTemplate[] {
+  public factory(count: number = 1): PrepaidCardTemplate[] {
     return Array.from({ length: count }, () => {
       return {
         id: faker.string.uuid(),

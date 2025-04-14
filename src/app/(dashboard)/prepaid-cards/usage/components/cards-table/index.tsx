@@ -16,12 +16,15 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import {
+  ArrowDown,
+  ArrowUp,
   CheckCircle,
   ChevronDown,
+  EyeIcon,
   MoreHorizontal,
+  PrinterIcon,
   XCircle,
 } from "lucide-react";
-import { PrintMenuItem } from "./components/print-menu-item";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -42,15 +45,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { PrepaidCardTemplate } from "@/lib/types";
+import { PrepaidCard } from "@/lib/types";
 import { usePrepaidCardTemplate } from "@/context/prepaid-card-template-context";
 import { Badge } from "@/components/ui/badge";
+import { usePrepaidCard } from "@/context/prepaid-card-context";
 
-export const columns: ColumnDef<PrepaidCardTemplate>[] = [
+export const columns: ColumnDef<PrepaidCard>[] = [
   {
-    accessorKey: "name",
-    header: () => <div className="text-start">Name</div>,
-    cell: ({ row }) => <div className="lowercase">{row.getValue("name")}</div>,
+    accessorKey: "template",
+    header: () => <div className="text-start">Template</div>,
+    cell: ({ row }) => (
+      <div className="lowercase">{row.original.template.name}</div>
+    ),
+  },
+  {
+    accessorKey: "seller",
+    header: () => <div className="text-start">Seller</div>,
+    cell: ({ row }) => <div className="lowercase">{row.original.seller}</div>,
   },
   {
     accessorKey: "amount",
@@ -82,7 +93,23 @@ export const columns: ColumnDef<PrepaidCardTemplate>[] = [
   },
   {
     accessorKey: "status",
-    header: "Status",
+    sortDescFirst: true,
+
+    header: ({ column }) => (
+      <div
+        className="cursor-pointer flex items-center gap-1"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Status{" "}
+        {column.getIsSorted() ? (
+          column.getNextSortingOrder() === "asc" ? (
+            <ArrowDown size={12} />
+          ) : (
+            <ArrowUp size={12} />
+          )
+        ) : null}
+      </div>
+    ),
     cell: ({ row }) => (
       <Badge
         className="capitalize"
@@ -101,36 +128,6 @@ export const columns: ColumnDef<PrepaidCardTemplate>[] = [
       </time>
     ),
   },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const template = row.original;
-      const isActive = row.getValue("status") === "active";
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <PrintMenuItem disabled={!isActive} template={template} />
-            <DropdownMenuSeparator />
-
-            {isActive ? (
-              <DeactivateMenuItem template={template} />
-            ) : (
-              <ActivateMenuItem template={template} />
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
 ];
 
 export function CardsTable() {
@@ -143,10 +140,10 @@ export function CardsTable() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-  const templates = usePrepaidCardTemplate().templates;
+  const cards = usePrepaidCard().cards;
 
   const table = useReactTable({
-    data: templates,
+    data: cards,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -169,9 +166,9 @@ export function CardsTable() {
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter names..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("seller")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
+            table.getColumn("seller")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -277,28 +274,5 @@ export function CardsTable() {
         </div>
       </div>
     </div>
-  );
-}
-
-function ActivateMenuItem({ template }: { template: PrepaidCardTemplate }) {
-  const activate = usePrepaidCardTemplate().activate;
-
-  return (
-    <DropdownMenuItem onClick={() => activate(template)}>
-      <CheckCircle /> Activate
-    </DropdownMenuItem>
-  );
-}
-
-function DeactivateMenuItem({ template }: { template: PrepaidCardTemplate }) {
-  const deactivate = usePrepaidCardTemplate().deactivate;
-
-  return (
-    <DropdownMenuItem
-      onClick={() => deactivate(template)}
-      className="min-w-fitt"
-    >
-      <XCircle /> Deactivate
-    </DropdownMenuItem>
   );
 }

@@ -15,12 +15,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import {
-  CheckCircle,
-  ChevronDown,
-  MoreHorizontal,
-  XCircle,
-} from "lucide-react";
+import { ChevronDown, MoreHorizontal } from "lucide-react";
 import { PrintMenuItem } from "./components/print-menu-item";
 
 import { Button } from "@/components/ui/button";
@@ -28,7 +23,6 @@ import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -42,71 +36,51 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { PrepaidCardTemplate } from "@/lib/types";
-import { usePrepaidCardTemplate } from "@/context/prepaid-card-template-context";
+import { Batch } from "@/lib/types";
 import { Badge } from "@/components/ui/badge";
+import { usePrepaidCard } from "@/context/prepaid-card-context";
 
-export const columns: ColumnDef<PrepaidCardTemplate>[] = [
+export const columns: ColumnDef<Batch>[] = [
   {
-    accessorKey: "name",
-    header: () => <div className="text-start">Name</div>,
-    cell: ({ row }) => <div className="lowercase">{row.getValue("name")}</div>,
-  },
-  {
-    accessorKey: "amount",
-    header: () => <div className="text-start">Amount</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
-
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "JOD",
-      }).format(amount);
-
-      return <div className="text-start font-medium">{formatted}</div>;
-    },
-  },
-  {
-    accessorKey: "price",
-    header: () => <div className="text-start">Price</div>,
-    cell: ({ row }) => {
-      const price = parseFloat(row.getValue("price"));
-
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "JOD",
-      }).format(price);
-
-      return <div className="text-start font-medium">{formatted}</div>;
-    },
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
+    accessorKey: "seller",
+    header: () => <div className="text-start">Seller</div>,
     cell: ({ row }) => (
-      <Badge
-        className="capitalize"
-        variant={row.getValue("status") === "active" ? "default" : "secondary"}
-      >
-        {row.getValue("status")}
+      <div className="lowercase">{row.getValue("seller")}</div>
+    ),
+  },
+  {
+    accessorKey: "template",
+    header: () => <div className="text-start">Template</div>,
+    cell: ({ row }) => (
+      <div className="lowercase">{(row.getValue("template") as any).name}</div>
+    ),
+  },
+  {
+    accessorKey: "id",
+    header: () => <div className="text-start">Batch ID</div>,
+    cell: ({ row }) => (
+      <Badge className="capitalize" variant="secondary">
+        {row.getValue("id")}
       </Badge>
     ),
   },
   {
     accessorKey: "createdAt",
     header: "Date Created",
-    cell: ({ row }) => (
-      <time>
-        {formatDistanceToNow(row.getValue("createdAt"), { addSuffix: true })}
-      </time>
-    ),
+    cell: ({ row }) => {
+      console.log(row);
+      return (
+        <time>
+          {formatDistanceToNow(row.getValue("createdAt"), { addSuffix: true })}
+        </time>
+      );
+    },
   },
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const template = row.original;
-      const isActive = row.getValue("status") === "active";
+      const batch = row.original;
 
       return (
         <DropdownMenu>
@@ -118,14 +92,8 @@ export const columns: ColumnDef<PrepaidCardTemplate>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <PrintMenuItem disabled={!isActive} template={template} />
+            <PrintMenuItem disabled={!batch.cards.length} batch={batch} />
             <DropdownMenuSeparator />
-
-            {isActive ? (
-              <DeactivateMenuItem template={template} />
-            ) : (
-              <ActivateMenuItem template={template} />
-            )}
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -133,7 +101,7 @@ export const columns: ColumnDef<PrepaidCardTemplate>[] = [
   },
 ];
 
-export function CardsTable() {
+export function BatchesTable() {
   const [sorting, setSorting] = React.useState<SortingState>([
     { id: "createdAt", desc: true },
   ]);
@@ -143,10 +111,10 @@ export function CardsTable() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
-  const templates = usePrepaidCardTemplate().templates;
+  const batches = usePrepaidCard().batches;
 
   const table = useReactTable({
-    data: templates,
+    data: batches,
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -169,9 +137,9 @@ export function CardsTable() {
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter names..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("seller")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
+            table.getColumn("seller")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -277,28 +245,5 @@ export function CardsTable() {
         </div>
       </div>
     </div>
-  );
-}
-
-function ActivateMenuItem({ template }: { template: PrepaidCardTemplate }) {
-  const activate = usePrepaidCardTemplate().activate;
-
-  return (
-    <DropdownMenuItem onClick={() => activate(template)}>
-      <CheckCircle /> Activate
-    </DropdownMenuItem>
-  );
-}
-
-function DeactivateMenuItem({ template }: { template: PrepaidCardTemplate }) {
-  const deactivate = usePrepaidCardTemplate().deactivate;
-
-  return (
-    <DropdownMenuItem
-      onClick={() => deactivate(template)}
-      className="min-w-fitt"
-    >
-      <XCircle /> Deactivate
-    </DropdownMenuItem>
   );
 }
