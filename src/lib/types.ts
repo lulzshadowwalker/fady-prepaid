@@ -28,3 +28,14 @@ export type Batch = {
   createdAt: string;
   seller: string;
 };
+
+export type GetPoint = {
+  latitude: number;
+  longitude: number;
+};
+
+export type Driver = {
+  name: string;
+  phone: string;
+  location?: GetPoint;
+}

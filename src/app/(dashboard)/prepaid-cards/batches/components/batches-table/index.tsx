@@ -49,6 +49,13 @@ export const columns: ColumnDef<Batch>[] = [
     ),
   },
   {
+    accessorKey: "quantity",
+    header: () => "quantity",
+    cell: ({ row }) => (
+      <div>{row.original.cards.length}</div>
+    ),
+  },
+  {
     accessorKey: "template",
     header: () => <div className="text-start">Template</div>,
     cell: ({ row }) => (

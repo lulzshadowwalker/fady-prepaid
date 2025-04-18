@@ -45,7 +45,6 @@ export const prepaidCardRepository = () =>
  * @returns The value corresponding to the current environment.
  */
 function either(dev: any, prod: any): any {
-  return prod;
   const isDev = process.env.NODE_ENV === "development";
 
   return isDev ? dev : prod;
