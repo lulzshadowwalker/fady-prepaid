@@ -74,38 +74,45 @@ export default function DriverLocationTracking() {
 
         {drivers
           .filter((d) => d.location)
-          .map((driver, i) => (
-            <Marker
-              key={i}
-              position={[driver.location!.latitude, driver.location!.longitude]}
-              icon={createCustomIcon(driver.status)}
-            >
-              <Tooltip direction="top" offset={[0, -10]} opacity={1}>
-                <Card>
-                  <CardHeader className="p-4">
-                    <CardTitle className="flex items-center gap-2">
-                      <div className="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden relative">
-                        <Image
-                          src={driver.avatar ?? null}
-                          alt=""
-                          fill
-                          sizes="100%"
-                          className="object-cover"
-                        />
-                      </div>
+          .map((driver, i) => {
+            const name = driver.name
+              .trim()
+              .toLowerCase()
+              .replace(/[^a-zA-Z0-9]/g, "+");
+            const fallback = `https://ui-avatars.com/api/?name=${name}`;
 
-                      <div className="flex flex-col">
-                        <span className="text-base">{driver.name}</span>
-                        <span className="text-sm font-light text-neutral-400">
-                          {driver.phone}
-                        </span>
-                      </div>
-                    </CardTitle>
-                  </CardHeader>
-                </Card>
-              </Tooltip>
-            </Marker>
-          ))}
+            return (
+              <Marker
+                key={i}
+                position={[driver.location!.latitude, driver.location!.longitude]}
+                icon={createCustomIcon(driver.status)}
+              >
+                <Tooltip direction="top" offset={[0, -10]} opacity={1}>
+                  <Card>
+                    <CardHeader className="p-4">
+                      <CardTitle className="flex items-center gap-2">
+                        <div className="h-12 w-12 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden relative">
+                          <Image
+                            src={driver.avatar ?? fallback}
+                            alt=""
+                            fill
+                            sizes="100%"
+                            className="object-cover" />
+                        </div>
+
+                        <div className="flex flex-col">
+                          <span className="text-base">{driver.name}</span>
+                          <span className="text-sm font-light text-neutral-400">
+                            {driver.phone}
+                          </span>
+                        </div>
+                      </CardTitle>
+                    </CardHeader>
+                  </Card>
+                </Tooltip>
+              </Marker>
+            );
+          })}
       </MapContainer>
     </Card>
   );
