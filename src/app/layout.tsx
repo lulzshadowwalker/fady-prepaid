@@ -6,6 +6,7 @@ import { Toaster } from '@/components/ui/toaster';
 import '@/lib/container';
 import { PrepaidCardTemplateProvider } from '@/context/prepaid-card-template-context';
 import { PrepaidCardProvider } from '@/context/prepaid-card-context';
+import { DriverProvider } from '@/context/driver-context';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -30,10 +31,13 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <PrepaidCardTemplateProvider>
           <PrepaidCardProvider>
-            {children}
-            <Toaster />
+            <DriverProvider>
+              {children}
+            </DriverProvider>
           </PrepaidCardProvider>
         </PrepaidCardTemplateProvider>
+
+        <Toaster />
       </body>
     </html>
   );

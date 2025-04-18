@@ -1,4 +1,4 @@
-import { ChevronUp, CreditCard, User2 } from "lucide-react";
+import { BoxIcon, ChartBarIcon, ChartLineIcon, ChevronUp, CreditCard, MapIcon, User2 } from "lucide-react";
 
 import {
   Sidebar,
@@ -40,7 +40,7 @@ export function AppSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <a href="/prepaid-cards/usage">
-                    <CreditCard />
+                    <ChartLineIcon />
                     <span>Card Usage</span>
                   </a>
                 </SidebarMenuButton>
@@ -49,8 +49,24 @@ export function AppSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <a href="/prepaid-cards/batches">
-                    <CreditCard />
+                    <BoxIcon />
                     <span>Batches</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Drivers</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <a href="/drivers/tracking">
+                    <MapIcon />
+                    <span>Tracking</span>
                   </a>
                 </SidebarMenuButton>
               </SidebarMenuItem>

@@ -31,7 +31,7 @@ export default async function middleware(request: NextRequest) {
 
   //  NOTE: Since we only have a single page in this dashboard so far, we redirect the user to the prepaid cards page
   if (pathname === '/') {
-    return redirect(request, '/prepaid-cards');
+    return redirect(request, '/prepaid-cards/templates');
   }
 
   return NextResponse.next();

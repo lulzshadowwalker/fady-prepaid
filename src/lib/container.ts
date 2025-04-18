@@ -7,6 +7,9 @@ import { FirebasePrepaidCardTemplateRepository } from "@/lib/repositories/Fireba
 import { PrepaidCardRepository } from "@/lib/contracts/prepaid-card-repository";
 import { InMemoryPrepaidCardRepository } from "./repositories/InMemoryPrepaidCardRepository";
 import { FirebasePrepaidCardRepository } from "./repositories/FirebasePrepaidCardRepository";
+import { DriverRepository } from "./contracts/driver-repository";
+import { InMemoryDriverRepository } from "./repositories/InMemoryDriverRepository";
+import { FirebaseDriverRepository } from "./repositories/FirebaseDriverRepository";
 
 const PREPAID_CARD_TEMPLATE_REPOSITORY = "PREPAID_CARD_TEMPLATE_REPOSITORY";
 
@@ -36,6 +39,15 @@ container.register<PrepaidCardRepository>(PREPAID_CARD_REPOSITORY, {
 
 export const prepaidCardRepository = () =>
   container.resolve<PrepaidCardRepository>(PREPAID_CARD_REPOSITORY);
+
+const DRIVER_REPOSITORY = "DRIVER_REPOSITORY";
+
+container.register<DriverRepository>(DRIVER_REPOSITORY, {
+  useClass: either(InMemoryDriverRepository, FirebaseDriverRepository),
+});
+
+export const driverRepository = () =>
+  container.resolve<DriverRepository>(DRIVER_REPOSITORY);
 
 /**
  * Returns the development or production value based on the current environment.

@@ -50,7 +50,7 @@ export const columns: ColumnDef<Batch>[] = [
   },
   {
     accessorKey: "quantity",
-    header: () => "quantity",
+    header: () => "Quantity",
     cell: ({ row }) => (
       <div>{row.original.cards.length}</div>
     ),

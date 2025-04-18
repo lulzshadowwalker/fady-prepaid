@@ -35,7 +35,12 @@ export type GetPoint = {
 };
 
 export type Driver = {
+  id: string;
   name: string;
   phone: string;
+  avatar: string;
   location?: GetPoint;
+  status: DriverStatus; 
 }
+
+export type DriverStatus = "idle" | "searching" | "working";
