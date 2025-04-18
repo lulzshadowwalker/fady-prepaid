@@ -25,14 +25,14 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Management</SidebarGroupLabel>
+          <SidebarGroupLabel>Prepaid Cards</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <a href="/prepaid-cards">
+                  <a href="/prepaid-cards/templates">
                     <CreditCard />
-                    <span>Prepaid Cards</span>
+                    <span>Templates</span>
                   </a>
                 </SidebarMenuButton>
               </SidebarMenuItem>
