@@ -40,7 +40,37 @@ export type Driver = {
   phone: string;
   avatar: string;
   location?: GetPoint;
-  status: DriverStatus; 
+  status: DriverStatus;
+  walletSummary?: WalletSummary;
 }
 
 export type DriverStatus = "idle" | "searching" | "working";
+
+export type TransactionType = "topup" | "transfer";
+
+// a single row in your dashboard’s transaction table
+export interface WalletTx {
+  id: string;                    // doc ID
+  date: Date;                    // createdAt.toDate()
+  type: TransactionType;
+  amount: number;                // for topup: cardValue; for transfer: moved amount
+  source: string;                // e.g. "Prepaid Card" or counterparty name
+  direction?: "in" | "out";      // only for transfers
+}
+
+export interface WalletSummary {
+  driverUid: string;             // driver ID
+  actualBalance: number;         // real paid/received money
+  addedBalance: number;          // promo, signup credit, etc.
+  totalBalance: number;          // sum of the two
+}
+
+export interface CashoutRequest {
+  id: string;
+  driver: Driver;
+  driverUid: string;
+  amount: number;
+  status: "pending" | "approved" | "rejected";
+  createdAt: Date;
+  updatedAt: Date;
+}

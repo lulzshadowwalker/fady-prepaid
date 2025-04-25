@@ -1,4 +1,12 @@
-import { BoxIcon, ChartBarIcon, ChartLineIcon, ChevronUp, CreditCard, MapIcon, User2 } from "lucide-react";
+import {
+  BoxIcon,
+  ChartLineIcon,
+  ChevronUp,
+  CreditCard,
+  MapIcon,
+  User2,
+  BanknoteIcon,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -67,6 +75,13 @@ export function AppSidebar() {
                   <a href="/drivers/tracking">
                     <MapIcon />
                     <span>Tracking</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem><SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <a href="/drivers/cashout-requests">
+                    <BanknoteIcon />
+                    <span>Cashout Requests</span>
                   </a>
                 </SidebarMenuButton>
               </SidebarMenuItem>

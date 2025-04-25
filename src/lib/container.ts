@@ -10,6 +10,8 @@ import { FirebasePrepaidCardRepository } from "./repositories/FirebasePrepaidCar
 import { DriverRepository } from "./contracts/driver-repository";
 import { InMemoryDriverRepository } from "./repositories/InMemoryDriverRepository";
 import { FirebaseDriverRepository } from "./repositories/FirebaseDriverRepository";
+import { CashoutRequestRepository } from "./contracts/cashout-request-repository";
+import { InMemoryCashoutRequestRepository } from "./repositories/InMemoryCashoutRequestRepository";
 
 const PREPAID_CARD_TEMPLATE_REPOSITORY = "PREPAID_CARD_TEMPLATE_REPOSITORY";
 
@@ -48,6 +50,24 @@ container.register<DriverRepository>(DRIVER_REPOSITORY, {
 
 export const driverRepository = () =>
   container.resolve<DriverRepository>(DRIVER_REPOSITORY);
+
+const CASHOUT_REQUEST_REPOSITORY = "CASHOUT_REQUEST_REPOSITORY";
+
+container.register<CashoutRequestRepository>(
+  CASHOUT_REQUEST_REPOSITORY,
+  {
+    useClass: either(
+      InMemoryCashoutRequestRepository,
+      InMemoryCashoutRequestRepository,
+    ),
+  }
+);
+
+export const cashoutRequestRepository = () =>
+  container.resolve<CashoutRequestRepository>(
+    CASHOUT_REQUEST_REPOSITORY
+  );
+
 
 /**
  * Returns the development or production value based on the current environment.

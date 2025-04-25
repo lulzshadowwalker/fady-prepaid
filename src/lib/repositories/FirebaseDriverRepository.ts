@@ -2,7 +2,7 @@ import {
   collection,
   getDocs,
   query, where,
-  documentId,           // ← import this
+  documentId,
 } from "firebase/firestore";
 import {
   getDatabase,

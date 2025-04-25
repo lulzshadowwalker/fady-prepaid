@@ -2,6 +2,7 @@ import { Driver } from "../types";
 import { faker } from "@faker-js/faker";
 import { randomInRange } from "../utils";
 import { DriverRepository } from "../contracts/driver-repository";
+import { InMemoryWalletRepository } from "./InMemoryWalletRepository";
 
 export class InMemoryDriverRepository implements DriverRepository {
   constructor() {
@@ -14,9 +15,9 @@ export class InMemoryDriverRepository implements DriverRepository {
     return Promise.resolve(this.drivers);
   }
 
-  public factory(count: number = 1): Driver[] {
+  public factory(count: number = 1, opts?: { withWalletSummary?: boolean }): Driver[] {
     return Array.from({ length: count }, () => {
-      return {
+      let driver: Driver = {
         id: faker.string.uuid(),
         name: faker.person.fullName(),
         phone: faker.phone.number(),
@@ -27,6 +28,13 @@ export class InMemoryDriverRepository implements DriverRepository {
         avatar: faker.image.avatar(),
         status: faker.helpers.arrayElement(["idle", "searching", "working"]),
       };
+
+      if (opts?.withWalletSummary) {
+        driver.walletSummary = new InMemoryWalletRepository().factory(1)[0];
+        driver.walletSummary!.driverUid = driver.id;
+      }
+
+      return driver;
     });
   }
 }
