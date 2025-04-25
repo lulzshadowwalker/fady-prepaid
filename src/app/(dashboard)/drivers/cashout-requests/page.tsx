@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { CashoutRequestsTable } from "./components/cashout-requests-table";
 
-export const metadata: Metadata = { title: "Card Usage | Fady" };
+export const metadata: Metadata = { title: "Cashout Requests | Fady" };
 
 export default function CashoutRequests() {
   return (
