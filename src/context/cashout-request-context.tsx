@@ -14,7 +14,7 @@ type State = {
 };
 
 type Actions = {
-  approveRequest: (id: string) => Promise<void>;
+  approveRequest: (id: string, actualAmount: number) => Promise<void>;
   rejectRequest: (id: string) => Promise<void>;
 };
 
@@ -31,12 +31,12 @@ export function CashoutRequestProvider({
     getCashoutRequests().then(setRequests);
   }, []);
 
-  async function approveRequest(id: string) {
+  async function approveRequest(id: string, actualAmount: number) {
     try {
-      await approveCashoutRequest(id);
+      await approveCashoutRequest(id, actualAmount);
       setRequests((prev) =>
         prev.map((req) =>
-          req.id === id ? { ...req, status: "approved" } : req
+          req.id === id ? { ...req, status: "approved", actualAmount } : req
         )
       );
 

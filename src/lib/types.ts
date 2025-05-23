@@ -69,7 +69,8 @@ export interface CashoutRequest {
   id: string;
   driver: Driver;
   driverUid: string;
-  amount: number;
+  amount: number; // requested amount
+  actualAmount?: number | null; // actual amount sent to driver (may be <= amount)
   status: "pending" | "approved" | "rejected";
   createdAt: Date;
   updatedAt: Date;

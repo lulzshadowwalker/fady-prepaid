@@ -15,7 +15,7 @@ export interface CashoutRequestRepository {
   /**
    * Approve a pending request
    */
-  approve(id: string): Promise<void>;
+  approve(id: string, actualAmount: number): Promise<void>
 
   /**
    * Reject a pending request
