@@ -92,6 +92,13 @@ export const columns: ColumnDef<PrepaidCard>[] = [
     },
   },
   {
+    accessorKey: "redemptionCode",
+    header: ({ column }) => "Redemption Code",
+    cell: ({ row }) => (
+      <Badge variant="secondary">{row.getValue("redemptionCode")}</Badge>
+    ),
+  },
+  {
     accessorKey: "status",
     sortDescFirst: true,
 
@@ -135,7 +142,7 @@ export function CardsTable() {
     { id: "createdAt", desc: true },
   ]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+    [],
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -165,11 +172,13 @@ export function CardsTable() {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter names..."
+          placeholder="Filter redemption code ..."
           value={(table.getColumn("seller")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("seller")?.setFilterValue(event.target.value)
-          }
+          onChange={(event) => {
+            table
+              .getColumn("redemptionCode")
+              ?.setFilterValue(event.target.value);
+          }}
           className="max-w-sm"
         />
         <DropdownMenu>
@@ -211,7 +220,7 @@ export function CardsTable() {
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -230,7 +239,7 @@ export function CardsTable() {
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
