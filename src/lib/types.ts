@@ -34,6 +34,14 @@ export type GetPoint = {
   longitude: number;
 };
 
+export type Partner = {
+  id: string;
+  nameEn: string;
+  nameAr: string;
+  logo: string; // URL or base64 string
+  createdAt: string;
+};
+
 export type Driver = {
   id: string;
   name: string;

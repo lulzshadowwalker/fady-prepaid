@@ -15,9 +15,12 @@ export class InMemoryDriverRepository implements DriverRepository {
     return Promise.resolve(this.drivers);
   }
 
-  public factory(count: number = 1, opts?: { withWalletSummary?: boolean }): Driver[] {
+  public factory(
+    count: number = 1,
+    opts?: { withWalletSummary?: boolean },
+  ): Driver[] {
     return Array.from({ length: count }, () => {
-      let driver: Driver = {
+      const driver: Driver = {
         id: faker.string.uuid(),
         name: faker.person.fullName(),
         phone: faker.phone.number(),

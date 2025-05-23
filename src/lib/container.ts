@@ -12,6 +12,9 @@ import { InMemoryDriverRepository } from "./repositories/InMemoryDriverRepositor
 import { FirebaseDriverRepository } from "./repositories/FirebaseDriverRepository";
 import { CashoutRequestRepository } from "./contracts/cashout-request-repository";
 import { InMemoryCashoutRequestRepository } from "./repositories/InMemoryCashoutRequestRepository";
+import { PartnerRepository } from "./contracts/partner-repository";
+import { InMemoryPartnerRepository } from "./repositories/InMemoryPartnerRepository";
+import { FirebasePartnerRepository } from "./repositories/FirebasePartnerRepository";
 
 const PREPAID_CARD_TEMPLATE_REPOSITORY = "PREPAID_CARD_TEMPLATE_REPOSITORY";
 
@@ -20,14 +23,14 @@ container.register<PrepaidCardTemplateRepository>(
   {
     useClass: either(
       InMemoryPrepaidCardTemplateRepository,
-      FirebasePrepaidCardTemplateRepository
+      FirebasePrepaidCardTemplateRepository,
     ),
-  }
+  },
 );
 
 export const prepaidCardTemplateRepository = () =>
   container.resolve<PrepaidCardTemplateRepository>(
-    PREPAID_CARD_TEMPLATE_REPOSITORY
+    PREPAID_CARD_TEMPLATE_REPOSITORY,
   );
 
 const PREPAID_CARD_REPOSITORY = "PREPAID_CARD_REPOSITORY";
@@ -35,7 +38,7 @@ const PREPAID_CARD_REPOSITORY = "PREPAID_CARD_REPOSITORY";
 container.register<PrepaidCardRepository>(PREPAID_CARD_REPOSITORY, {
   useClass: either(
     InMemoryPrepaidCardRepository,
-    FirebasePrepaidCardRepository
+    FirebasePrepaidCardRepository,
   ),
 });
 
@@ -53,21 +56,24 @@ export const driverRepository = () =>
 
 const CASHOUT_REQUEST_REPOSITORY = "CASHOUT_REQUEST_REPOSITORY";
 
-container.register<CashoutRequestRepository>(
-  CASHOUT_REQUEST_REPOSITORY,
-  {
-    useClass: either(
-      InMemoryCashoutRequestRepository,
-      InMemoryCashoutRequestRepository,
-    ),
-  }
-);
+container.register<CashoutRequestRepository>(CASHOUT_REQUEST_REPOSITORY, {
+  useClass: either(
+    InMemoryCashoutRequestRepository,
+    InMemoryCashoutRequestRepository,
+  ),
+});
 
 export const cashoutRequestRepository = () =>
-  container.resolve<CashoutRequestRepository>(
-    CASHOUT_REQUEST_REPOSITORY
-  );
+  container.resolve<CashoutRequestRepository>(CASHOUT_REQUEST_REPOSITORY);
 
+const PARTNER_REPOSITORY = "PARTNER_REPOSITORY";
+
+container.register<PartnerRepository>(PARTNER_REPOSITORY, {
+  useClass: either(InMemoryPartnerRepository, FirebasePartnerRepository),
+});
+
+export const partnerRepository = () =>
+  container.resolve<PartnerRepository>(PARTNER_REPOSITORY);
 
 /**
  * Returns the development or production value based on the current environment.
@@ -79,5 +85,5 @@ export const cashoutRequestRepository = () =>
 function either(dev: any, prod: any): any {
   const isDev = process.env.NODE_ENV === "development";
 
-  return isDev ? dev : prod;
+  return false ? dev : prod;
 }
