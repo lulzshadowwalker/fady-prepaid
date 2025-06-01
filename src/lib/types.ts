@@ -50,7 +50,7 @@ export type Driver = {
   location?: GetPoint;
   status: DriverStatus;
   walletSummary?: WalletSummary;
-}
+};
 
 export type DriverStatus = "idle" | "searching" | "working";
 
@@ -58,19 +58,19 @@ export type TransactionType = "topup" | "transfer";
 
 // a single row in your dashboard’s transaction table
 export interface WalletTx {
-  id: string;                    // doc ID
-  date: Date;                    // createdAt.toDate()
+  id: string; // doc ID
+  date: Date; // createdAt.toDate()
   type: TransactionType;
-  amount: number;                // for topup: cardValue; for transfer: moved amount
-  source: string;                // e.g. "Prepaid Card" or counterparty name
-  direction?: "in" | "out";      // only for transfers
+  amount: number; // for topup: cardValue; for transfer: moved amount
+  source: string; // e.g. "Prepaid Card" or counterparty name
+  direction?: "in" | "out"; // only for transfers
 }
 
 export interface WalletSummary {
-  driverUid: string;             // driver ID
-  actualBalance: number;         // real paid/received money
-  addedBalance: number;          // promo, signup credit, etc.
-  totalBalance: number;          // sum of the two
+  driverUid: string; // driver ID
+  actualBalance: number; // real paid/received money
+  addedBalance: number; // promo, signup credit, etc.
+  totalBalance: number; // sum of the two
 }
 
 export interface CashoutRequest {
@@ -80,6 +80,13 @@ export interface CashoutRequest {
   amount: number; // requested amount
   actualAmount?: number | null; // actual amount sent to driver (may be <= amount)
   status: "pending" | "approved" | "rejected";
+  transferMethod: "cliq" | "iban";
+  iban?: string;
+  cliq?: {
+    alias?: string;
+    phone?: string;
+    wallet: string;
+  };
   createdAt: Date;
   updatedAt: Date;
 }

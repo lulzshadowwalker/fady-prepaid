@@ -85,5 +85,5 @@ export const partnerRepository = () =>
 function either(dev: any, prod: any): any {
   const isDev = process.env.NODE_ENV === "development";
 
-  return false ? dev : prod;
+  return isDev ? dev : prod;
 }

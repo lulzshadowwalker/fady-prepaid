@@ -1,6 +1,6 @@
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-import { v4 as uuidv4 } from 'uuid';
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+import { v4 as uuidv4 } from "uuid";
 
 /**
  * Combines multiple class names into a single string, merging Tailwind CSS classes intelligently.
@@ -32,6 +32,13 @@ export function randomInRange(min: number, max: number) {
  * @returns {string} A unique redemption code consisting of 11 uppercase alphanumeric characters.
  */
 export function generateRedemptionCode() {
-  const uuid = uuidv4().replace(/-/g, '');
+  const uuid = uuidv4().replace(/-/g, "");
   return parseInt(uuid, 16).toString(36).substring(0, 11).toUpperCase();
+}
+
+export function formatAmount(amount: number, currency: string = "JOD"): string {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: currency,
+  }).format(amount);
 }

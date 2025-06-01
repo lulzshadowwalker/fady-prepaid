@@ -1,8 +1,9 @@
 "use client";
 
 import "reflect-metadata";
-import { formatDistanceToNow } from "date-fns";
-import * as React from "react";
+import { formatDistanceToNow, format } from "date-fns";
+import React from "react";
+import { Copy } from "lucide-react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -20,8 +21,8 @@ import {
   ArrowUp,
   CheckCircle,
   ChevronDown,
+  Eye,
   MoreHorizontal,
-  PrinterIcon,
   XCircle,
 } from "lucide-react";
 
@@ -48,7 +49,6 @@ import { Badge } from "@/components/ui/badge";
 
 import { CashoutRequest } from "@/lib/types";
 import { useCashoutRequest } from "@/context/cashout-request-context";
-import { toast } from "@/hooks/use-toast";
 import {
   Dialog,
   DialogContent,
@@ -59,6 +59,18 @@ import {
   DialogClose,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { cn, formatAmount } from "@/lib/utils";
+import { Label } from "@/components/ui/label";
+import { toast } from "@/hooks/use-toast";
 
 export function CashoutRequestsTable() {
   const { requests, approveRequest, rejectRequest } = useCashoutRequest();
@@ -78,12 +90,12 @@ export function CashoutRequestsTable() {
         id: "actualBalance",
         header: () => <div className="text-start">Actual Balance</div>,
         cell: ({ row }) => {
-          const bal = row.original.driver.walletSummary!.actualBalance;
-          const formatted = new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "JOD",
-          }).format(bal);
-          return <div className="text-start font-medium">{formatted}</div>;
+          const balance = row.original.driver.walletSummary!.actualBalance;
+          return (
+            <div className="text-start font-medium">
+              {formatAmount(balance)}
+            </div>
+          );
         },
       },
       {
@@ -91,24 +103,22 @@ export function CashoutRequestsTable() {
         id: "addedBalance",
         header: () => <div className="text-start">Added Balance</div>,
         cell: ({ row }) => {
-          const bal = row.original.driver.walletSummary!.addedBalance;
-          const formatted = new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "JOD",
-          }).format(bal);
-          return <div className="text-start font-medium">{formatted}</div>;
+          const balance = row.original.driver.walletSummary!.addedBalance;
+          return (
+            <div className="text-start font-medium">
+              {formatAmount(balance)}
+            </div>
+          );
         },
       },
       {
         accessorKey: "amount",
-        header: () => <div className="text-start">Request Amount</div>,
+        header: () => <div className="text-start">Requested Amount</div>,
         cell: ({ row }) => {
-          const amt = row.getValue<number>("amount");
-          const formatted = new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "JOD",
-          }).format(amt);
-          return <div className="text-start font-medium">{formatted}</div>;
+          const amount = row.getValue<number>("amount");
+          return (
+            <div className="text-start font-medium">{formatAmount(amount)}</div>
+          );
         },
       },
       {
@@ -129,14 +139,7 @@ export function CashoutRequestsTable() {
         ),
         cell: ({ row }) => {
           const status = row.getValue<CashoutRequest["status"]>("status");
-          let variant: "default" | "secondary" | "destructive" = "secondary";
-          if (status === "approved") variant = "default";
-          if (status === "rejected") variant = "destructive";
-          return (
-            <Badge className="capitalize text-start" variant={variant}>
-              {status}
-            </Badge>
-          );
+          return <StatusBadge status={status} />;
         },
       },
       {
@@ -154,42 +157,236 @@ export function CashoutRequestsTable() {
         id: "actions",
         header: "Actions",
         cell: ({ row }) => {
-          const { id, status, amount } = row.original;
+          const {
+            id,
+            status,
+            amount,
+            driver,
+            transferMethod,
+            cliq,
+            iban,
+            createdAt,
+          } = row.original;
           return (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
-                  <span className="sr-only">Open menu</span>
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                <ApproveDialog
-                  id={id}
-                  requestedAmount={amount}
-                  disabled={status !== "pending"}
-                  trigger={
-                    <DropdownMenuItem
-                      disabled={status !== "pending"}
-                      onSelect={(e) => e.preventDefault()}
-                    >
-                      <CheckCircle /> Approve
-                    </DropdownMenuItem>
-                  }
-                />
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  disabled={status !== "pending"}
-                  onSelect={(e) => {
-                    e.preventDefault();
-                    rejectRequest(id);
-                  }}
-                >
-                  <XCircle /> Reject
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <>
+              <Sheet>
+                <SheetTrigger>
+                  <Button variant="ghost" className="h-8 w-8 p-0">
+                    <span className="sr-only">View Details</span>
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                </SheetTrigger>
+
+                <SheetContent className="overflow-y-auto">
+                  <SheetHeader>
+                    <SheetTitle>{driver.name} Cashout Request</SheetTitle>
+
+                    <SheetDescription>
+                      Review {driver.name} request from{" "}
+                      <time className="text-start">
+                        {formatDistanceToNow(createdAt as Date, {
+                          addSuffix: true,
+                        })}{" "}
+                        — {format(new Date(createdAt), "yyyy-MM-dd HH:mm")}.
+                      </time>
+                      <br />
+                      <StatusBadge status={status} className="my-4" />
+                    </SheetDescription>
+                  </SheetHeader>
+
+                  <div className="grid flex-1 auto-rows-min gap-6">
+                    <div>
+                      <div className="tracking-wide text-neutral-600 font-medium">
+                        Driver
+                      </div>
+                      <div className="text-sm">{driver.name}</div>
+                    </div>
+
+                    <div>
+                      <div className="tracking-wide text-neutral-600 font-medium">
+                        Actual Balance
+                      </div>
+                      <div className="text-sm">
+                        {driver.walletSummary!.actualBalance}
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="tracking-wide text-neutral-600 font-medium">
+                        Added Balance
+                      </div>
+                      <div className="text-sm">
+                        {driver.walletSummary!.addedBalance}
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="tracking-wide text-neutral-600 font-medium">
+                        Requested Amount
+                      </div>
+                      <div className="text-sm">{formatAmount(amount)}</div>
+                    </div>
+
+                    <div>
+                      <div className="tracking-wide text-neutral-600 font-medium">
+                        Added Balance
+                      </div>
+                      <div className="text-sm">
+                        {driver.walletSummary!.addedBalance}
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="tracking-wide text-neutral-600 font-medium">
+                        Transfer Method
+                      </div>
+                      <Badge>
+                        {transferMethod === "iban" ? "IBAN" : "CliQ"}
+                      </Badge>
+                    </div>
+
+                    {transferMethod === "iban" ? (
+                      <div>
+                        <div className="tracking-wide text-neutral-600 font-medium">
+                          IBAN
+                        </div>
+                        <div className="flex items-center gap-2 tracking-widest">
+                          {iban}
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            onClick={async () => {
+                              try {
+                                await navigator.clipboard.writeText(iban!);
+                                toast({
+                                  title: "Copied!",
+                                  description: "IBAN copied to clipboard.",
+                                });
+                              } catch {
+                                toast({
+                                  title: "Copy failed",
+                                  description:
+                                    "Could not copy IBAN. Please try again.",
+                                  variant: "destructive",
+                                });
+                              }
+                            }}
+                            className="ms-auto"
+                            aria-label="Copy IBAN"
+                          >
+                            <Copy className="w-1 h-1" />
+                          </Button>
+                        </div>
+                      </div>
+                    ) : null}
+
+                    {transferMethod === "cliq" ? (
+                      <div>
+                        <div className="tracking-wide text-neutral-600 font-medium">
+                          {cliq!.alias ? "Alias" : "Phone Number"}
+                        </div>
+                        <div className="flex items-center gap-2 tracking-widest">
+                          {cliq!.alias ? cliq!.alias : cliq!.phone}
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="ms-auto"
+                            onClick={async () => {
+                              const value = cliq!.alias
+                                ? cliq!.alias
+                                : cliq!.phone;
+                              try {
+                                await navigator.clipboard.writeText(value!);
+                                toast({
+                                  title: "Copied!",
+                                  description: "Copied to clipboard.",
+                                });
+                              } catch {
+                                toast({
+                                  title: "Copy failed",
+                                  description:
+                                    "Could not copy CliQ alias or phone number. Please try again.",
+                                  variant: "destructive",
+                                });
+                              }
+                            }}
+                            aria-label="Copy value"
+                          >
+                            <Copy className="w-1 h-1" />
+                          </Button>
+                        </div>
+                      </div>
+                    ) : null}
+                  </div>
+
+                  <SheetFooter>
+                    <div className="flex flex-col items-stetch gap-2 w-full mt-8">
+                      <ApproveDialog
+                        id={id}
+                        requestedAmount={amount}
+                        disabled={status !== "pending"}
+                        trigger={
+                          <Button
+                            disabled={status !== "pending"}
+                            onSelect={(e) => e.preventDefault()}
+                          >
+                            <CheckCircle /> Approve
+                          </Button>
+                        }
+                      />
+
+                      <Button
+                        disabled={status !== "pending"}
+                        variant="destructive"
+                        onSelect={(e) => {
+                          e.preventDefault();
+                          rejectRequest(id);
+                        }}
+                      >
+                        <XCircle /> Reject
+                      </Button>
+                    </div>
+                  </SheetFooter>
+                </SheetContent>
+              </Sheet>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="h-8 w-8 p-0">
+                    <span className="sr-only">Open menu</span>
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                  <ApproveDialog
+                    id={id}
+                    requestedAmount={amount}
+                    disabled={status !== "pending"}
+                    trigger={
+                      <DropdownMenuItem
+                        disabled={status !== "pending"}
+                        onSelect={(e) => e.preventDefault()}
+                      >
+                        <CheckCircle /> Approve
+                      </DropdownMenuItem>
+                    }
+                  />
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    disabled={status !== "pending"}
+                    onSelect={(e) => {
+                      e.preventDefault();
+                      rejectRequest(id);
+                    }}
+                  >
+                    <XCircle /> Reject
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
           );
         },
       },
@@ -435,5 +632,23 @@ function ApproveDialog({
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  );
+}
+
+function StatusBadge({
+  status,
+  className,
+}: {
+  status: string;
+  className?: string;
+}) {
+  let variant: "default" | "secondary" | "destructive" = "secondary";
+  if (status === "approved") variant = "default";
+  if (status === "rejected") variant = "destructive";
+
+  return (
+    <Badge className={cn("capitalize text-start", className)} variant={variant}>
+      {status}
+    </Badge>
   );
 }

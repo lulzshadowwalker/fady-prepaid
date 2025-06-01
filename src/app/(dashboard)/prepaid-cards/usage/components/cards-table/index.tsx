@@ -15,25 +15,13 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import {
-  ArrowDown,
-  ArrowUp,
-  CheckCircle,
-  ChevronDown,
-  EyeIcon,
-  MoreHorizontal,
-  PrinterIcon,
-  XCircle,
-} from "lucide-react";
+import { ArrowDown, ArrowUp, ChevronDown } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
@@ -46,7 +34,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { PrepaidCard } from "@/lib/types";
-import { usePrepaidCardTemplate } from "@/context/prepaid-card-template-context";
 import { Badge } from "@/components/ui/badge";
 import { usePrepaidCard } from "@/context/prepaid-card-context";
 
