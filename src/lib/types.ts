@@ -56,6 +56,33 @@ export type DriverStatus = "idle" | "searching" | "working";
 
 export type TransactionType = "topup" | "transfer";
 
+// --- Promocode Rule Types ---
+
+export type PromocodeRule =
+  | { type: "gender"; gender: "male" | "female" }
+  | { type: "expiration"; expiresAt: string } // ISO date string
+  | { type: "maxUses"; maxUses: number }
+  | { type: "maxUsesPerUser"; maxUses: number }
+  | { type: "timeOfDay"; from: string; to: string } // "HH:mm" 24h format
+  // Add more rule types as needed
+  ;
+
+// --- Promocode Type ---
+
+export type Promocode = {
+  id: string;
+  code: string; // the code users enter
+  description?: string;
+  discountType: "amount" | "percent";
+  discountValue: number;
+  active: boolean;
+  createdAt: string;
+  createdBy?: string;
+  rules?: PromocodeRule[];
+  usageCount: number; // total times used
+  usagePerUser?: Record<string, number>; // userId -> times used
+};
+
 // a single row in your dashboard’s transaction table
 export interface WalletTx {
   id: string; // doc ID
@@ -75,7 +102,7 @@ export interface WalletSummary {
 
 export interface CashoutRequest {
   id: string;
-  driver: Driver;
+  driver?: Driver;
   driverUid: string;
   amount: number; // requested amount
   actualAmount?: number | null; // actual amount sent to driver (may be <= amount)

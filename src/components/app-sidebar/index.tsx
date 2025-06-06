@@ -6,6 +6,7 @@ import {
   MapIcon,
   User2,
   BanknoteIcon,
+  TicketIcon,
 } from "lucide-react";
 
 import {
@@ -98,6 +99,22 @@ export function AppSidebar() {
                   <a href="/drivers/cashout-requests">
                     <BanknoteIcon />
                     <span>Cashout Requests</span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Promocodes</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <a href="/promocodes">
+                    <TicketIcon />
+                    <span>Manage Promocodes</span>
                   </a>
                 </SidebarMenuButton>
               </SidebarMenuItem>

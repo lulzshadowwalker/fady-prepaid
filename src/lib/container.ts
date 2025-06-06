@@ -15,6 +15,9 @@ import { InMemoryCashoutRequestRepository } from "./repositories/InMemoryCashout
 import { PartnerRepository } from "./contracts/partner-repository";
 import { InMemoryPartnerRepository } from "./repositories/InMemoryPartnerRepository";
 import { FirebasePartnerRepository } from "./repositories/FirebasePartnerRepository";
+import { FirebaseCashoutRequestRepository } from "./repositories/FirebaseCashoutRequestRepository";
+import { PromocodeRepository } from "./contracts/promocode-repository";
+import { InMemoryPromocodeRepository } from "./repositories/InMemoryPromocodeRepository";
 
 const PREPAID_CARD_TEMPLATE_REPOSITORY = "PREPAID_CARD_TEMPLATE_REPOSITORY";
 
@@ -59,7 +62,7 @@ const CASHOUT_REQUEST_REPOSITORY = "CASHOUT_REQUEST_REPOSITORY";
 container.register<CashoutRequestRepository>(CASHOUT_REQUEST_REPOSITORY, {
   useClass: either(
     InMemoryCashoutRequestRepository,
-    InMemoryCashoutRequestRepository,
+    FirebaseCashoutRequestRepository,
   ),
 });
 
@@ -87,3 +90,12 @@ function either(dev: any, prod: any): any {
 
   return isDev ? dev : prod;
 }
+
+const PROMOCODE_REPOSITORY = "PROMOCODE_REPOSITORY";
+
+container.register<PromocodeRepository>(PROMOCODE_REPOSITORY, {
+  useClass: InMemoryPromocodeRepository,
+});
+
+export const promocodeRepository = () =>
+  container.resolve<PromocodeRepository>(PROMOCODE_REPOSITORY);
