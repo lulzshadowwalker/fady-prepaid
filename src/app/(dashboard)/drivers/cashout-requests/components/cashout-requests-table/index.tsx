@@ -204,6 +204,15 @@ export function CashoutRequestsTable() {
 
                     <div>
                       <div className="tracking-wide text-neutral-600 font-medium">
+                        Total Balance
+                      </div>
+                      <div className="text-sm">
+                        {driver.walletSummary!.totalBalance}
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="tracking-wide text-neutral-600 font-medium">
                         Actual Balance
                       </div>
                       <div className="text-sm">
@@ -225,15 +234,6 @@ export function CashoutRequestsTable() {
                         Requested Amount
                       </div>
                       <div className="text-sm">{formatAmount(amount)}</div>
-                    </div>
-
-                    <div>
-                      <div className="tracking-wide text-neutral-600 font-medium">
-                        Added Balance
-                      </div>
-                      <div className="text-sm">
-                        {driver.walletSummary!.addedBalance}
-                      </div>
                     </div>
 
                     <div>

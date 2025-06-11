@@ -94,7 +94,8 @@ export function AppSidebar() {
                     <span>Tracking</span>
                   </a>
                 </SidebarMenuButton>
-              </SidebarMenuItem><SidebarMenuItem>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <a href="/drivers/cashout-requests">
                     <BanknoteIcon />
@@ -114,7 +115,7 @@ export function AppSidebar() {
                 <SidebarMenuButton asChild>
                   <a href="/promocodes">
                     <TicketIcon />
-                    <span>Manage Promocodes</span>
+                    <span>Promocodes</span>
                   </a>
                 </SidebarMenuButton>
               </SidebarMenuItem>

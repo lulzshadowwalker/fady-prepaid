@@ -62,7 +62,9 @@ export function CreatePromocodeButton() {
   // Form state
   const [code, setCode] = useState("");
   const [description, setDescription] = useState("");
-  const [discountType, setDiscountType] = useState<"amount" | "percent">("amount");
+  const [discountType, setDiscountType] = useState<"amount" | "percent">(
+    "amount",
+  );
   const [discountValue, setDiscountValue] = useState<number>(1);
   const [active, setActive] = useState(true);
   const [rules, setRules] = useState<RuleDraft[]>([]);
@@ -88,10 +90,16 @@ export function CreatePromocodeButton() {
         return;
       }
       if (!discountValue || discountValue <= 0) {
-        toast({ title: "Discount value must be positive", variant: "destructive" });
+        toast({
+          title: "Discount value must be positive",
+          variant: "destructive",
+        });
         return;
       }
-      const promocode: Omit<Promocode, "id" | "createdAt" | "usageCount" | "usagePerUser"> = {
+      const promocode: Omit<
+        Promocode,
+        "id" | "createdAt" | "usageCount" | "usagePerUser"
+      > = {
         code: code.trim(),
         description: description.trim() || undefined,
         discountType,
@@ -118,7 +126,45 @@ export function CreatePromocodeButton() {
 
   function handleRuleChange(idx: number, updated: Partial<RuleDraft>) {
     setRules((prev) =>
-      prev.map((r, i) => (i === idx ? { ...r, ...updated } : r))
+      prev.map((r, i) => {
+        if (i !== idx) return r;
+        // Type-safe merge based on rule type
+        switch (r.type) {
+          case "gender":
+            return {
+              ...r,
+              ...(updated as Partial<Extract<RuleDraft, { type: "gender" }>>),
+            };
+          case "expiration":
+            return {
+              ...r,
+              ...(updated as Partial<
+                Extract<RuleDraft, { type: "expiration" }>
+              >),
+            };
+          case "maxUses":
+            return {
+              ...r,
+              ...(updated as Partial<Extract<RuleDraft, { type: "maxUses" }>>),
+            };
+          case "maxUsesPerUser":
+            return {
+              ...r,
+              ...(updated as Partial<
+                Extract<RuleDraft, { type: "maxUsesPerUser" }>
+              >),
+            };
+          case "timeOfDay":
+            return {
+              ...r,
+              ...(updated as Partial<
+                Extract<RuleDraft, { type: "timeOfDay" }>
+              >),
+            };
+          default:
+            return r;
+        }
+      }),
     );
   }
 
@@ -171,7 +217,9 @@ export function CreatePromocodeButton() {
                   <div className="flex gap-2 mt-1">
                     <Button
                       type="button"
-                      variant={discountType === "amount" ? "default" : "outline"}
+                      variant={
+                        discountType === "amount" ? "default" : "outline"
+                      }
                       onClick={() => setDiscountType("amount")}
                       size="sm"
                     >
@@ -179,7 +227,9 @@ export function CreatePromocodeButton() {
                     </Button>
                     <Button
                       type="button"
-                      variant={discountType === "percent" ? "default" : "outline"}
+                      variant={
+                        discountType === "percent" ? "default" : "outline"
+                      }
                       onClick={() => setDiscountType("percent")}
                       size="sm"
                     >
@@ -197,7 +247,9 @@ export function CreatePromocodeButton() {
                     value={discountValue}
                     onChange={(e) => setDiscountValue(Number(e.target.value))}
                     required
-                    placeholder={discountType === "percent" ? "e.g. 10" : "e.g. 5"}
+                    placeholder={
+                      discountType === "percent" ? "e.g. 10" : "e.g. 5"
+                    }
                   />
                 </div>
               </div>
@@ -213,14 +265,16 @@ export function CreatePromocodeButton() {
                 <Label>Rules</Label>
                 <div className="flex flex-col gap-2 mt-2">
                   {rules.length === 0 && (
-                    <span className="text-muted-foreground text-xs">No rules added</span>
+                    <span className="text-muted-foreground text-xs">
+                      No rules added
+                    </span>
                   )}
-                  {rules.map((rule, idx) => (
+                  {(rules as RuleDraft[]).map((rule, idx) => (
                     <div
                       key={idx}
                       className={cn(
                         "flex items-center gap-2 border rounded px-2 py-2 bg-muted",
-                        "flex-wrap"
+                        "flex-wrap",
                       )}
                     >
                       <Badge variant="secondary" className="mr-2">
@@ -248,7 +302,9 @@ export function CreatePromocodeButton() {
                             className="border rounded px-2 py-1"
                             value={rule.gender}
                             onChange={(e) =>
-                              handleRuleChange(idx, { gender: e.target.value as "male" | "female" })
+                              handleRuleChange(idx, {
+                                gender: e.target.value as "male" | "female",
+                              })
                             }
                           >
                             <option value="male">Male</option>
@@ -260,7 +316,9 @@ export function CreatePromocodeButton() {
                         <>
                           <Input
                             type="date"
-                            value={rule.expiresAt ? rule.expiresAt.slice(0, 10) : ""}
+                            value={
+                              rule.expiresAt ? rule.expiresAt.slice(0, 10) : ""
+                            }
                             onChange={(e) =>
                               handleRuleChange(idx, {
                                 expiresAt: e.target.value
@@ -279,11 +337,15 @@ export function CreatePromocodeButton() {
                             min={1}
                             value={rule.maxUses}
                             onChange={(e) =>
-                              handleRuleChange(idx, { maxUses: Number(e.target.value) })
+                              handleRuleChange(idx, {
+                                maxUses: Number(e.target.value),
+                              })
                             }
                             className="w-20"
                           />
-                          <span className="text-xs text-muted-foreground">total</span>
+                          <span className="text-xs text-muted-foreground">
+                            total
+                          </span>
                         </>
                       )}
                       {rule.type === "maxUsesPerUser" && (
@@ -293,11 +355,15 @@ export function CreatePromocodeButton() {
                             min={1}
                             value={rule.maxUses}
                             onChange={(e) =>
-                              handleRuleChange(idx, { maxUses: Number(e.target.value) })
+                              handleRuleChange(idx, {
+                                maxUses: Number(e.target.value),
+                              })
                             }
                             className="w-20"
                           />
-                          <span className="text-xs text-muted-foreground">per user</span>
+                          <span className="text-xs text-muted-foreground">
+                            per user
+                          </span>
                         </>
                       )}
                       {rule.type === "timeOfDay" && (
@@ -338,11 +404,16 @@ export function CreatePromocodeButton() {
                     <select
                       className="border rounded px-2 py-1"
                       value={addingRuleType}
-                      onChange={(e) => setAddingRuleType(e.target.value as RuleType | "")}
+                      onChange={(e) =>
+                        setAddingRuleType(e.target.value as RuleType | "")
+                      }
                     >
                       <option value="">Add rule...</option>
                       {RULE_TYPES.filter(
-                        (rt) => !rules.some((r) => r.type === rt.value)
+                        (rt) =>
+                          !rules.some(
+                            (r) => (r as RuleDraft).type === rt.value,
+                          ),
                       ).map((rt) => (
                         <option key={rt.value} value={rt.value}>
                           {rt.label}

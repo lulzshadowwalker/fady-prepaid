@@ -8,10 +8,12 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { injectable, inject } from "tsyringe";
 import { firestore } from "@/lib/firebase";
 import { CashoutRequest, Driver } from "../types";
 import { CashoutRequestRepository } from "../contracts/cashout-request-repository";
 import { DriverConverter } from "../converter/driver-converter";
+import type { WalletRepository } from "../contracts/wallet-repository";
 
 // Converter for mapping Firestore docs to CashoutRequest (without driver)
 export const CashoutRequestConverter = {
@@ -39,11 +41,16 @@ export const CashoutRequestConverter = {
   },
 };
 
+@injectable()
 export class FirebaseCashoutRequestRepository
   implements CashoutRequestRepository
 {
   private collectionName = "cashout_requests";
   private driversCollection = "drivers_data";
+
+  constructor(
+    @inject("WALLET_REPOSITORY") private walletRepository: WalletRepository,
+  ) {}
 
   async getAll(): Promise<CashoutRequest[]> {
     const collectionRef = collection(firestore, this.collectionName);
@@ -71,16 +78,20 @@ export class FirebaseCashoutRequestRepository
         where("uid", "in", chunk),
       );
       const driverSnap = await getDocs(q);
-      driverSnap.docs.forEach((doc) => {
+      for (const doc of driverSnap.docs) {
         const driver = DriverConverter.fromFirestore(doc);
-        driver.walletSummary = {
+        const walletSummary = await this.walletRepository.getSummary(
+          doc.data().uid,
+        );
+        console.log("Wallet Summary", walletSummary);
+        driver.walletSummary = walletSummary || {
           driverUid: driver.id,
           actualBalance: 0,
           addedBalance: 0,
           totalBalance: 0,
         };
         driverMap[doc.data().uid] = driver;
-      });
+      }
     }
 
     // Attach driver to each request
@@ -105,6 +116,15 @@ export class FirebaseCashoutRequestRepository
     let driver: Driver | undefined = undefined;
     if (!driverSnap.empty) {
       driver = DriverConverter.fromFirestore(driverSnap.docs[0]);
+      const walletSummary = await this.walletRepository.getSummary(
+        req.driverUid,
+      );
+      driver.walletSummary = walletSummary || {
+        driverUid: driver.id,
+        actualBalance: 0,
+        addedBalance: 0,
+        totalBalance: 0,
+      };
     }
 
     return {

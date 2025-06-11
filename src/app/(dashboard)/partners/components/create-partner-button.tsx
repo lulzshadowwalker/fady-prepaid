@@ -81,9 +81,9 @@ export function CreatePartnerButton() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="mt-8 ms-auto flex max-sm:w-full">
+        <div className="mt-8 ms-auto flex max-sm:w-full">
           Create <PlusCircle />
-        </Button>
+        </div>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

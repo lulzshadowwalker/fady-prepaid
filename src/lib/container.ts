@@ -18,6 +18,9 @@ import { FirebasePartnerRepository } from "./repositories/FirebasePartnerReposit
 import { FirebaseCashoutRequestRepository } from "./repositories/FirebaseCashoutRequestRepository";
 import { PromocodeRepository } from "./contracts/promocode-repository";
 import { InMemoryPromocodeRepository } from "./repositories/InMemoryPromocodeRepository";
+import { WalletRepository } from "./contracts/wallet-repository";
+import { InMemoryWalletRepository } from "./repositories/InMemoryWalletRepository";
+import { FirebaseWalletRepository } from "./repositories/FirebaseWalletRepository";
 
 const PREPAID_CARD_TEMPLATE_REPOSITORY = "PREPAID_CARD_TEMPLATE_REPOSITORY";
 
@@ -57,6 +60,12 @@ container.register<DriverRepository>(DRIVER_REPOSITORY, {
 export const driverRepository = () =>
   container.resolve<DriverRepository>(DRIVER_REPOSITORY);
 
+const WALLET_REPOSITORY = "WALLET_REPOSITORY";
+
+container.register<WalletRepository>(WALLET_REPOSITORY, {
+  useClass: either(InMemoryWalletRepository, FirebaseWalletRepository),
+});
+
 const CASHOUT_REQUEST_REPOSITORY = "CASHOUT_REQUEST_REPOSITORY";
 
 container.register<CashoutRequestRepository>(CASHOUT_REQUEST_REPOSITORY, {
@@ -78,6 +87,18 @@ container.register<PartnerRepository>(PARTNER_REPOSITORY, {
 export const partnerRepository = () =>
   container.resolve<PartnerRepository>(PARTNER_REPOSITORY);
 
+const PROMOCODE_REPOSITORY = "PROMOCODE_REPOSITORY";
+
+container.register<PromocodeRepository>(PROMOCODE_REPOSITORY, {
+  useClass: InMemoryPromocodeRepository,
+});
+
+export const promocodeRepository = () =>
+  container.resolve<PromocodeRepository>(PROMOCODE_REPOSITORY);
+
+export const walletRepository = () =>
+  container.resolve<WalletRepository>(WALLET_REPOSITORY);
+
 /**
  * Returns the development or production value based on the current environment.
  *
@@ -88,14 +109,5 @@ export const partnerRepository = () =>
 function either(dev: any, prod: any): any {
   const isDev = process.env.NODE_ENV === "development";
 
-  return isDev ? dev : prod;
+  return false ? dev : prod;
 }
-
-const PROMOCODE_REPOSITORY = "PROMOCODE_REPOSITORY";
-
-container.register<PromocodeRepository>(PROMOCODE_REPOSITORY, {
-  useClass: InMemoryPromocodeRepository,
-});
-
-export const promocodeRepository = () =>
-  container.resolve<PromocodeRepository>(PROMOCODE_REPOSITORY);

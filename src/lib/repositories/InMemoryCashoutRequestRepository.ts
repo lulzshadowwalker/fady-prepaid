@@ -1,9 +1,11 @@
 import { faker } from "@faker-js/faker";
+import { injectable } from "tsyringe";
 import { CashoutRequestRepository } from "../contracts/cashout-request-repository";
 import { CashoutRequest } from "../types";
 import { InMemoryDriverRepository } from "./InMemoryDriverRepository";
 
 // In-memory implementation (for local development or testing)
+@injectable()
 export class InMemoryCashoutRequestRepository
   implements CashoutRequestRepository
 {

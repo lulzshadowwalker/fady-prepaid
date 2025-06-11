@@ -1,10 +1,12 @@
 import { faker } from "@faker-js/faker";
+import { injectable } from "tsyringe";
 import { WalletSummary } from "@/lib/types";
 import { WalletRepository } from "../contracts/wallet-repository";
 
 /**
  * In-memory implementation of WalletRepository, with fake data
  */
+@injectable()
 export class InMemoryWalletRepository implements WalletRepository {
   async getSummary(driverUid: string): Promise<WalletSummary | undefined> {
     const summary = this.factory(1)[0];

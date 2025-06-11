@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,21 +9,35 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { PlusCircle } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { toast } from '@/hooks/use-toast';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { usePrepaidCardTemplate } from '@/context/prepaid-card-template-context';
-import { useState } from 'react';
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { PlusCircle } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { toast } from "@/hooks/use-toast";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { usePrepaidCardTemplate } from "@/context/prepaid-card-template-context";
+import { useState } from "react";
 
 const FormSchema = z.object({
   name: z.string(),
-  amount: z.coerce.number({ message: 'Amount must be a positive integer' }).int().positive(),
-  price: z.coerce.number({ message: 'Price must be a positive integer' }).int().positive(),
+  amount: z.coerce
+    .number({ message: "Amount must be a positive integer" })
+    .int()
+    .positive(),
+  price: z.coerce
+    .number({ message: "Price must be a positive integer" })
+    .int()
+    .positive(),
 });
 
 export function CreateCardButton() {
@@ -39,22 +53,24 @@ export function CreateCardButton() {
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
       await createTemplate({
-        name: data.name ?? 'None',
+        name: data.name ?? "None",
         amount: data.amount.toString(),
         price: data.price.toString(),
       });
 
       toast({
-        title: 'Prepaid card template created successfully',
-        description: 'You can now print this card and use it to add money to your account.',
+        title: "Prepaid card template created successfully",
+        description:
+          "You can now print this card and use it to add money to your account.",
       });
 
       setIsDialogOpen(false);
     } catch (_) {
       toast({
-        title: 'Something went wrong',
-        description: 'Failed to create the prepaid card template. Please try again later.',
-        variant: 'destructive',
+        title: "Something went wrong",
+        description:
+          "Failed to create the prepaid card template. Please try again later.",
+        variant: "destructive",
       });
     }
   }
@@ -67,28 +83,32 @@ export function CreateCardButton() {
   return (
     <Dialog open={isDialogOpen} onOpenChange={handleOnOpenChange}>
       <DialogTrigger asChild>
-        <Button className='mt-8 ms-auto flex max-sm:w-full'>
+        <div className="mt-8 ms-auto flex max-sm:w-full">
           Create <PlusCircle />
-        </Button>
+        </div>
       </DialogTrigger>
-      <DialogContent className='sm:max-w-[425px]'>
-        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+      <DialogContent className="sm:max-w-[425px]">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <DialogHeader>
             <DialogTitle>New Prepaid Card</DialogTitle>
-            <DialogDescription>Fill out the form below to create a new prepaid card.</DialogDescription>
+            <DialogDescription>
+              Fill out the form below to create a new prepaid card.
+            </DialogDescription>
           </DialogHeader>
 
           <Form {...form}>
             <FormField
               control={form.control}
-              name='name'
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder='Friendly name' {...field} required />
+                    <Input placeholder="Friendly name" {...field} required />
                   </FormControl>
-                  <FormDescription>A friendly name to help you identify this card.</FormDescription>
+                  <FormDescription>
+                    A friendly name to help you identify this card.
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -96,14 +116,16 @@ export function CreateCardButton() {
 
             <FormField
               control={form.control}
-              name='amount'
+              name="amount"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Amount</FormLabel>
                   <FormControl>
-                    <Input placeholder='55 JOD' {...field} required />
+                    <Input placeholder="55 JOD" {...field} required />
                   </FormControl>
-                  <FormDescription>The amount of money to add to this card</FormDescription>
+                  <FormDescription>
+                    The amount of money to add to this card
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -111,14 +133,16 @@ export function CreateCardButton() {
 
             <FormField
               control={form.control}
-              name='price'
+              name="price"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Price</FormLabel>
                   <FormControl>
-                    <Input placeholder='50 JOD' {...field} required />
+                    <Input placeholder="50 JOD" {...field} required />
                   </FormControl>
-                  <FormDescription>The retail price the customer will pay</FormDescription>
+                  <FormDescription>
+                    The retail price the customer will pay
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -126,7 +150,7 @@ export function CreateCardButton() {
           </Form>
 
           <DialogFooter>
-            <Button type='submit'>Create</Button>
+            <Button type="submit">Create</Button>
           </DialogFooter>
         </form>
       </DialogContent>
