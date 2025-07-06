@@ -21,6 +21,7 @@ import { InMemoryPromocodeRepository } from "./repositories/InMemoryPromocodeRep
 import { WalletRepository } from "./contracts/wallet-repository";
 import { InMemoryWalletRepository } from "./repositories/InMemoryWalletRepository";
 import { FirebaseWalletRepository } from "./repositories/FirebaseWalletRepository";
+import { FirebasePromocodeRepository } from "./repositories/FirebasePromocodeRepository";
 
 const PREPAID_CARD_TEMPLATE_REPOSITORY = "PREPAID_CARD_TEMPLATE_REPOSITORY";
 
@@ -90,7 +91,7 @@ export const partnerRepository = () =>
 const PROMOCODE_REPOSITORY = "PROMOCODE_REPOSITORY";
 
 container.register<PromocodeRepository>(PROMOCODE_REPOSITORY, {
-  useClass: InMemoryPromocodeRepository,
+  useClass: either(InMemoryPromocodeRepository, FirebasePromocodeRepository),
 });
 
 export const promocodeRepository = () =>
