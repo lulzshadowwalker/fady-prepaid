@@ -83,9 +83,9 @@ export function CreateCardButton() {
   return (
     <Dialog open={isDialogOpen} onOpenChange={handleOnOpenChange}>
       <DialogTrigger asChild>
-        <div className="mt-8 ms-auto flex max-sm:w-full">
+        <Button className="mt-8 ms-auto flex max-sm:w-full">
           Create <PlusCircle />
-        </div>
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
