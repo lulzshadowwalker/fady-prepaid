@@ -9,7 +9,10 @@ export class PartnerConverter {
       id: doc.id,
       nameEn: data.nameEn,
       nameAr: data.nameAr,
+      descriptionEn: data.descriptionEn,
+      descriptionAr: data.descriptionAr,
       logo: data.logo,
+      location: data.location,
       createdAt: data.createdAt,
     };
   }
