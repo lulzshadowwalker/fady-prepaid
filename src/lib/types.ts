@@ -38,6 +38,9 @@ export type Partner = {
   id: string;
   nameEn: string;
   nameAr: string;
+  descriptionEn?: string;
+  descriptionAr?: string;
+  location?: string;
   logo: string; // URL or base64 string
   createdAt: string;
 };

@@ -6,7 +6,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-  DialogClose,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -21,6 +20,9 @@ export function CreatePartnerButton() {
   const [open, setOpen] = useState(false);
   const [nameEn, setNameEn] = useState("");
   const [nameAr, setNameAr] = useState("");
+  const [descriptionEn, setDescriptionEn] = useState("");
+  const [descriptionAr, setDescriptionAr] = useState("");
+  const [location, setLocation] = useState("");
   const [logo, setLogo] = useState("");
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string>("");
@@ -38,6 +40,9 @@ export function CreatePartnerButton() {
       await create({
         nameEn,
         nameAr,
+        descriptionAr,
+        descriptionEn,
+        location,
         logo: logoDataUrl,
         createdAt: new Date().toISOString(),
       });
@@ -102,6 +107,24 @@ export function CreatePartnerButton() {
             onChange={(e) => setNameAr(e.target.value)}
             required
           />
+          <Input
+            placeholder="English Description"
+            value={descriptionEn}
+            onChange={(e) => setDescriptionEn(e.target.value)}
+            required
+          />
+          <Input
+            placeholder="Arabic Description"
+            value={descriptionAr}
+            onChange={(e) => setDescriptionAr(e.target.value)}
+            required
+          />
+          <Input
+            placeholder="Google Maps Location"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            required
+          />
           <div>
             <Label htmlFor="logo-upload">Logo</Label>
             <Input
@@ -122,7 +145,7 @@ export function CreatePartnerButton() {
                 />
               </div>
             )}
-          </div>
+          </Input>
         </div>
         <DialogFooter>
           <Button

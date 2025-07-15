@@ -42,6 +42,9 @@ export class InMemoryPartnerRepository implements PartnerRepository {
       id: faker.string.uuid(),
       nameEn: faker.company.name(),
       nameAr: faker.company.name() + " العربية",
+      descriptionAr: faker.lorem.paragraph(),
+      descriptionEn: faker.lorem.paragraph(),
+      location: "https://maps.app.goo.gl/1GxsSpjqsfUcgB818",
       logo: faker.image.avatar(),
       createdAt: faker.date.anytime().toString(),
     }));

@@ -36,6 +36,7 @@ import { ChevronDown, MoreHorizontal, Trash2 } from "lucide-react";
 import { usePartner } from "@/context/partner-context";
 import { Partner } from "@/lib/types";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 export const columns: ColumnDef<Partner>[] = [
   {
@@ -62,6 +63,34 @@ export const columns: ColumnDef<Partner>[] = [
     accessorKey: "nameAr",
     header: () => <div className="text-start">Name (AR)</div>,
     cell: ({ row }) => <div>{row.getValue("nameAr")}</div>,
+  },
+  {
+    accessorKey: "descriptionEn",
+    header: () => <div className="text-start">Description (EN)</div>,
+    cell: ({ row }) => (
+      <div className="max-w-sm">{row.getValue("descriptionEn")}</div>
+    ),
+  },
+  {
+    accessorKey: "descriptionAr",
+    header: () => <div className="text-start">Description (AR)</div>,
+    cell: ({ row }) => (
+      <div className="max-w-sm">{row.getValue("descriptionAr")}</div>
+    ),
+  },
+  {
+    accessorKey: "location",
+    header: () => <div className="text-start">Google Maps</div>,
+    cell: ({ row }) => (
+      <a
+        href={row.getValue("location")}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={cn("text-blue-600 hover:underline", { "disabled": !row.getValue("location") })}
+      >
+        {row.getValue("location") ? "View on Google Maps" : "No Location"}
+      </a>
+    ),
   },
   {
     accessorKey: "createdAt",
@@ -175,9 +204,9 @@ export function PartnersTable() {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
                     </TableHead>
                   );
                 })}
