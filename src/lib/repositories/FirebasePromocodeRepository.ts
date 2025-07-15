@@ -72,10 +72,10 @@ export const PromocodeConverter = {
   ) {
     const data: any = {
       code: promocode.code,
-      description: promocode.description,
+      description: promocode.description ?? "",
       discountType: promocode.discountType,
       discountValue: promocode.discountValue,
-      active: promocode.active,
+      active: promocode.active ?? true,
       createdAt: serverTimestamp(),
       rules: promocode.rules ? promocode.rules.map(serializeRule) : [],
       usageCount: promocode.usageCount ?? 0,

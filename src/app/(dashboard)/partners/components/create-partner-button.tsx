@@ -24,6 +24,7 @@ export function CreatePartnerButton() {
   const [descriptionAr, setDescriptionAr] = useState("");
   const [location, setLocation] = useState("");
   const [logo, setLogo] = useState("");
+  const [phone, setPhone] = useState("");
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string>("");
   const [loading, setLoading] = useState(false);
@@ -43,6 +44,7 @@ export function CreatePartnerButton() {
         descriptionAr,
         descriptionEn,
         location,
+        phone,
         logo: logoDataUrl,
         createdAt: new Date().toISOString(),
       });
@@ -52,6 +54,7 @@ export function CreatePartnerButton() {
       setLogo("");
       setLogoFile(null);
       setLogoPreview("");
+      setPhone("");
     } finally {
       setLoading(false);
     }
@@ -120,7 +123,15 @@ export function CreatePartnerButton() {
             required
           />
           <Input
+            placeholder="Phone Number"
+            autoComplete="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}  
+            required
+          />
+          <Input
             placeholder="Google Maps Location"
+            autoCapitalize="url"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
             required

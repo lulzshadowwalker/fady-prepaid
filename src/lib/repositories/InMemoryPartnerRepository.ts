@@ -46,6 +46,7 @@ export class InMemoryPartnerRepository implements PartnerRepository {
       descriptionEn: faker.lorem.paragraph(),
       location: "https://maps.app.goo.gl/1GxsSpjqsfUcgB818",
       logo: faker.image.avatar(),
+      phone: faker.phone.number(),
       createdAt: faker.date.anytime().toString(),
     }));
   }

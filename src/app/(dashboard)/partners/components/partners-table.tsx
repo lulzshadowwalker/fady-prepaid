@@ -79,6 +79,13 @@ export const columns: ColumnDef<Partner>[] = [
     ),
   },
   {
+    accessorKey: "phone",
+    header: () => <div className="text-start">Phone</div>,
+    cell: ({ row }) => (
+      <div className="max-w-sm">{row.getValue("phone")}</div>
+    ),
+  },
+  {
     accessorKey: "location",
     header: () => <div className="text-start">Google Maps</div>,
     cell: ({ row }) => (

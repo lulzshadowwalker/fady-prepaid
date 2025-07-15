@@ -34,12 +34,13 @@ export class FirebasePartnerRepository implements PartnerRepository {
       logoUrl = await this.uploadLogo(data.logo);
     }
     const docRef = await addDoc(collection(firestore, this.collectionName), {
-      nameEn: data.nameEn,
-      nameAr: data.nameAr,
-      descriptionEn: data.descriptionEn,
-      descriptionAr: data.descriptionAr,
-      location: data.location,
-      logo: logoUrl,
+      nameEn: data.nameEn ?? "",
+      nameAr: data.nameAr ?? "",
+      descriptionEn: data.descriptionEn ?? "",
+      descriptionAr: data.descriptionAr ?? "",
+      phone: data.phone ?? "",
+      location: data.location ?? "",
+      logo: logoUrl ?? "",
       createdAt: data.createdAt ?? new Date().toISOString(),
     });
     const snap = await getDoc(docRef);
