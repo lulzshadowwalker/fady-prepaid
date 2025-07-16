@@ -95,7 +95,7 @@ export const columns: ColumnDef<Promocode>[] = [
       </time>
     ),
     enableSorting: true,
-    defaultHidden: true,
+    // defaultHidden: true,
   },
   {
     accessorKey: "usageCount",

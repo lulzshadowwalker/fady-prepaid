@@ -78,35 +78,35 @@ export function CashoutRequestsTable() {
   const columns = React.useMemo<ColumnDef<CashoutRequest>[]>(
     () => [
       {
-        accessorFn: (row) => row.driver.name,
+        accessorFn: (row) => row.driver?.name ?? "Unknown Driver",
         id: "driverName",
         header: () => <div className="text-start">Driver</div>,
         cell: ({ row }) => (
-          <div className="lowercase text-start">{row.original.driver.name}</div>
+          <div className="lowercase text-start">{row.original.driver?.name}</div>
         ),
       },
       {
-        accessorFn: (row) => row.driver.walletSummary!.actualBalance,
+        accessorFn: (row) => row.driver?.walletSummary!.actualBalance,
         id: "actualBalance",
         header: () => <div className="text-start">Actual Balance</div>,
         cell: ({ row }) => {
-          const balance = row.original.driver.walletSummary!.actualBalance;
+          const balance = row.original?.driver?.walletSummary!.actualBalance;
           return (
             <div className="text-start font-medium">
-              {formatAmount(balance)}
+              {balance ? formatAmount(balance) : null}
             </div>
           );
         },
       },
       {
-        accessorFn: (row) => row.driver.walletSummary!.addedBalance,
+        accessorFn: (row) => row.driver?.walletSummary!.addedBalance,
         id: "addedBalance",
         header: () => <div className="text-start">Added Balance</div>,
         cell: ({ row }) => {
-          const balance = row.original.driver.walletSummary!.addedBalance;
+          const balance = row.original?.driver?.walletSummary!.addedBalance;
           return (
             <div className="text-start font-medium">
-              {formatAmount(balance)}
+              {balance ? formatAmount(balance) : null}
             </div>
           );
         },
@@ -179,10 +179,10 @@ export function CashoutRequestsTable() {
 
                 <SheetContent className="overflow-y-auto">
                   <SheetHeader>
-                    <SheetTitle>{driver.name} Cashout Request</SheetTitle>
+                    <SheetTitle>{driver?.name} Cashout Request</SheetTitle>
 
                     <SheetDescription>
-                      Review {driver.name} request from{" "}
+                      Review {driver?.name} request from{" "}
                       <time className="text-start">
                         {formatDistanceToNow(createdAt as Date, {
                           addSuffix: true,
@@ -199,7 +199,7 @@ export function CashoutRequestsTable() {
                       <div className="tracking-wide text-neutral-600 font-medium">
                         Driver
                       </div>
-                      <div className="text-sm">{driver.name}</div>
+                      <div className="text-sm">{driver?.name}</div>
                     </div>
 
                     <div>
@@ -207,7 +207,7 @@ export function CashoutRequestsTable() {
                         Total Balance
                       </div>
                       <div className="text-sm">
-                        {driver.walletSummary!.totalBalance}
+                        {driver?.walletSummary!.totalBalance}
                       </div>
                     </div>
 
@@ -216,7 +216,7 @@ export function CashoutRequestsTable() {
                         Actual Balance
                       </div>
                       <div className="text-sm">
-                        {driver.walletSummary!.actualBalance}
+                        {driver?.walletSummary!.actualBalance}
                       </div>
                     </div>
 
@@ -225,7 +225,7 @@ export function CashoutRequestsTable() {
                         Added Balance
                       </div>
                       <div className="text-sm">
-                        {driver.walletSummary!.addedBalance}
+                        {driver?.walletSummary!.addedBalance}
                       </div>
                     </div>
 

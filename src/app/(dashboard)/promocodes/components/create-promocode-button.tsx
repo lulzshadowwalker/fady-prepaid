@@ -291,7 +291,7 @@ export function CreatePromocodeButton() {
                             case "timeOfDay":
                               return "Time of Day";
                             default:
-                              return rule.type;
+                              return (rule as any).type;
                           }
                         })()}
                       </Badge>
