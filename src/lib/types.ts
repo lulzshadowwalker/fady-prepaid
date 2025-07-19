@@ -46,6 +46,19 @@ export type Partner = {
   createdAt: string;
 };
 
+export type Passenger = {
+  id: string;
+  name: string;
+  walletSummary?: PassengerWalletSummary;
+};
+
+export interface PassengerWalletSummary {
+  passengerUid: string; // passenger ID
+  actualBalance: number; // real paid/received money
+  addedBalance: number; // promo, signup credit, etc.
+  totalBalance: number; // sum of the two
+}
+
 export type Driver = {
   id: string;
   name: string;
@@ -110,6 +123,24 @@ export interface CashoutRequest {
   driverUid: string;
   amount: number; // requested amount
   actualAmount?: number | null; // actual amount sent to driver (may be <= amount)
+  status: "pending" | "approved" | "rejected";
+  transferMethod: "cliq" | "iban";
+  iban?: string;
+  cliq?: {
+    alias?: string;
+    phone?: string;
+    wallet: string;
+  };
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface PassengerCashoutRequest {
+  id: string;
+  passenger?: Passenger;
+  passengerUid: string;
+  amount: number; 
+  actualAmount?: number | null; 
   status: "pending" | "approved" | "rejected";
   transferMethod: "cliq" | "iban";
   iban?: string;

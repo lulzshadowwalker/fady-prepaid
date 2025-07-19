@@ -8,6 +8,7 @@ import { PrepaidCardTemplateProvider } from '@/context/prepaid-card-template-con
 import { PrepaidCardProvider } from '@/context/prepaid-card-context';
 import { DriverProvider } from '@/context/driver-context';
 import { CashoutRequestProvider } from '@/context/cashout-request-context';
+import { PassengerCashoutRequestProvider } from '@/context/passenger-cashout-request-context';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -34,7 +35,9 @@ export default function RootLayout({
           <PrepaidCardProvider>
             <DriverProvider>
               <CashoutRequestProvider>
+              <PassengerCashoutRequestProvider>
                 {children}
+              </PassengerCashoutRequestProvider>
               </CashoutRequestProvider>
             </DriverProvider>
           </PrepaidCardProvider>

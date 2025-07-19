@@ -1,34 +1,34 @@
 import { faker } from "@faker-js/faker";
 import { injectable } from "tsyringe";
-import { CashoutRequestRepository } from "../contracts/cashout-request-repository";
-import { CashoutRequest } from "../types";
-import { InMemoryDriverRepository } from "./InMemoryDriverRepository";
+import { PassengerCashoutRequest } from "../types";
+import { PassengerCashoutRequestRepository } from "../contracts/passenger-cashout-request-repository";
+import { InMemoryPassengerRepository } from "./InMemoryPassengerRepository";
 
 // In-memory implementation (for local development or testing)
 @injectable()
-export class InMemoryCashoutRequestRepository
-  implements CashoutRequestRepository
+export class InMemoryPassengerCashoutRequestRepository
+  implements PassengerCashoutRequestRepository
 {
-  private requests: CashoutRequest[];
-  private driverRepo = new InMemoryDriverRepository();
+  private requests: PassengerCashoutRequest[];
+  private passengerRepo = new InMemoryPassengerRepository();
 
   constructor() {
     this.requests = this.factory(10);
   }
 
   /**
-   * Generate fake CashoutRequest data, including a fake driver
+   * Generate fake CashoutRequest data, including a fake passenger.
    */
-  private factory(count: number): CashoutRequest[] {
+  private factory(count: number): PassengerCashoutRequest[] {
     return Array.from({ length: count }, () => {
-      const driver = this.driverRepo.factory(1, { withWalletSummary: true })[0];
+      const passenger = this.passengerRepo.factory(1, { withWalletSummary: true })[0];
       const created = faker.date.recent({ days: 30 });
       const transferMethod = faker.helpers.arrayElement<
-        CashoutRequest["transferMethod"]
+        PassengerCashoutRequest["transferMethod"]
       >(["cliq", "iban"]);
 
       let iban: string | undefined;
-      let cliq: CashoutRequest["cliq"] | undefined;
+      let cliq: PassengerCashoutRequest["cliq"] | undefined;
 
       if (transferMethod === "iban") {
         iban = faker.finance.iban();
@@ -42,7 +42,7 @@ export class InMemoryCashoutRequestRepository
         };
       }
 
-      const status = faker.helpers.arrayElement<CashoutRequest["status"]>([
+      const status = faker.helpers.arrayElement<PassengerCashoutRequest["status"]>([
         "pending",
         "approved",
         "rejected",
@@ -54,8 +54,8 @@ export class InMemoryCashoutRequestRepository
 
       return {
         id: faker.string.uuid(),
-        driverUid: driver.id,
-        driver,
+        passengerUid: passenger.id,
+        passenger,
         amount: parseFloat(faker.finance.amount({ min: 5, max: 500, dec: 2 })),
         status,
         transferMethod,
@@ -67,11 +67,11 @@ export class InMemoryCashoutRequestRepository
     });
   }
 
-  async getAll(): Promise<CashoutRequest[]> {
+  async getAll(): Promise<PassengerCashoutRequest[]> {
     return [...this.requests];
   }
 
-  async getById(id: string): Promise<CashoutRequest | undefined> {
+  async getById(id: string): Promise<PassengerCashoutRequest | undefined> {
     return this.requests.find((r) => r.id === id);
   }
 

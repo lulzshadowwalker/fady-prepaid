@@ -22,6 +22,8 @@ import { WalletRepository } from "./contracts/wallet-repository";
 import { InMemoryWalletRepository } from "./repositories/InMemoryWalletRepository";
 import { FirebaseWalletRepository } from "./repositories/FirebaseWalletRepository";
 import { FirebasePromocodeRepository } from "./repositories/FirebasePromocodeRepository";
+import { PassengerCashoutRequestRepository } from "./contracts/passenger-cashout-request-repository";
+import { InMemoryPassengerCashoutRequestRepository } from "./repositories/InMemoryPassengerCashoutRequestRepository";
 
 const PREPAID_CARD_TEMPLATE_REPOSITORY = "PREPAID_CARD_TEMPLATE_REPOSITORY";
 
@@ -79,6 +81,19 @@ container.register<CashoutRequestRepository>(CASHOUT_REQUEST_REPOSITORY, {
 export const cashoutRequestRepository = () =>
   container.resolve<CashoutRequestRepository>(CASHOUT_REQUEST_REPOSITORY);
 
+const PASSENGER_CASHOUT_REQUEST_REPOSITORY = "PASSENGER_CASHOUT_REQUEST_REPOSITORY";
+
+container.register<PassengerCashoutRequestRepository>(PASSENGER_CASHOUT_REQUEST_REPOSITORY, {
+  useClass: either(
+    InMemoryPassengerCashoutRequestRepository,
+    InMemoryPassengerCashoutRequestRepository,
+    // FirebasePassengerCashoutRequestRepository,
+  ),
+});
+
+export const passengerCashoutRequestRepository = () =>
+  container.resolve<PassengerCashoutRequestRepository>(PASSENGER_CASHOUT_REQUEST_REPOSITORY);
+
 const PARTNER_REPOSITORY = "PARTNER_REPOSITORY";
 
 container.register<PartnerRepository>(PARTNER_REPOSITORY, {
@@ -110,5 +125,6 @@ export const walletRepository = () =>
 function either(dev: any, prod: any): any {
   const isDev = process.env.NODE_ENV === "development";
 
-  return false ? dev : prod;
+  // return false ? dev : prod;
+  return isDev ? dev : prod;
 }
