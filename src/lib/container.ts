@@ -24,6 +24,7 @@ import { FirebaseWalletRepository } from "./repositories/FirebaseWalletRepositor
 import { FirebasePromocodeRepository } from "./repositories/FirebasePromocodeRepository";
 import { PassengerCashoutRequestRepository } from "./contracts/passenger-cashout-request-repository";
 import { InMemoryPassengerCashoutRequestRepository } from "./repositories/InMemoryPassengerCashoutRequestRepository";
+import { FirebasePassengerCashoutRequestRepository } from "./repositories/FirebasePassengerCashoutRequestRepository";
 
 const PREPAID_CARD_TEMPLATE_REPOSITORY = "PREPAID_CARD_TEMPLATE_REPOSITORY";
 
@@ -86,8 +87,7 @@ const PASSENGER_CASHOUT_REQUEST_REPOSITORY = "PASSENGER_CASHOUT_REQUEST_REPOSITO
 container.register<PassengerCashoutRequestRepository>(PASSENGER_CASHOUT_REQUEST_REPOSITORY, {
   useClass: either(
     InMemoryPassengerCashoutRequestRepository,
-    InMemoryPassengerCashoutRequestRepository,
-    // FirebasePassengerCashoutRequestRepository,
+    FirebasePassengerCashoutRequestRepository,
   ),
 });
 
@@ -125,6 +125,6 @@ export const walletRepository = () =>
 function either(dev: any, prod: any): any {
   const isDev = process.env.NODE_ENV === "development";
 
-  // return false ? dev : prod;
-  return isDev ? dev : prod;
+  return false ? dev : prod;
+  // return isDev ? dev : prod;
 }
