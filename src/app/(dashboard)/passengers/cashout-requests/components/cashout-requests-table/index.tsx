@@ -196,7 +196,7 @@ export function CashoutRequestsTable() {
                   <div className="grid flex-1 auto-rows-min gap-6">
                     <div>
                       <div className="tracking-wide text-neutral-600 font-medium">
-                       passenger 
+                       passenger
                       </div>
                       <div className="text-sm">{passenger?.name}</div>
                     </div>
@@ -550,7 +550,7 @@ function ApproveDialog({
   disabled?: boolean;
   trigger: React.ReactNode;
 }) {
-  const { approveRequest } = useCashoutRequest();
+  const { approveRequest } = usePassengerCashoutRequest();
   const [open, setOpen] = React.useState(false);
   const [actualAmount, setActualAmount] = React.useState(requestedAmount);
   const [error, setError] = React.useState<string | null>(null);
