@@ -93,7 +93,7 @@ export function CashoutRequestsTable() {
           const balance = row.original?.driver?.walletSummary!.actualBalance;
           return (
             <div className="text-start font-medium">
-              {balance ? formatAmount(balance) : null}
+              {formatAmount(balance ?? 0)}
             </div>
           );
         },
@@ -106,7 +106,7 @@ export function CashoutRequestsTable() {
           const balance = row.original?.driver?.walletSummary!.addedBalance;
           return (
             <div className="text-start font-medium">
-              {balance ? formatAmount(balance) : null}
+              {formatAmount(balance ?? 0)}
             </div>
           );
         },

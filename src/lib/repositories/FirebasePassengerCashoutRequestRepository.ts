@@ -24,7 +24,7 @@ export class FirebasePassengerCashoutRequestRepository
   private passengersCollection = "customers_data";
 
   constructor(
-    @inject("WALLET_REPOSITORY") private walletRepository: PassengerWalletRepository,
+    @inject("PASSENGER_WALLET_REPOSITORY") private walletRepository: PassengerWalletRepository,
   ) {}
 
   async getAll(): Promise<PassengerCashoutRequest[]> {
@@ -58,7 +58,7 @@ export class FirebasePassengerCashoutRequestRepository
         const walletSummary = await this.walletRepository.getSummary(
           doc.data().uid,
         );
-        console.log("Wallet Summary", walletSummary);
+        console.log("Wallet Summary here", walletSummary);
         passenger.walletSummary = walletSummary || {
           passengerUid: passenger.id,
           actualBalance: 0,

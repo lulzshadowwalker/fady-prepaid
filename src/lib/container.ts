@@ -25,6 +25,9 @@ import { FirebasePromocodeRepository } from "./repositories/FirebasePromocodeRep
 import { PassengerCashoutRequestRepository } from "./contracts/passenger-cashout-request-repository";
 import { InMemoryPassengerCashoutRequestRepository } from "./repositories/InMemoryPassengerCashoutRequestRepository";
 import { FirebasePassengerCashoutRequestRepository } from "./repositories/FirebasePassengerCashoutRequestRepository";
+import { InMemoryPassengerWalletRepository } from "./repositories/InMemoryPassengerWalletRepository";
+import { PassengerWalletRepository } from "./contracts/passenger-wallet-repository";
+import { FirebasePassengerWalletRepository } from "./repositories/FirebasePassengerWalletRepository";
 
 const PREPAID_CARD_TEMPLATE_REPOSITORY = "PREPAID_CARD_TEMPLATE_REPOSITORY";
 
@@ -68,6 +71,15 @@ const WALLET_REPOSITORY = "WALLET_REPOSITORY";
 
 container.register<WalletRepository>(WALLET_REPOSITORY, {
   useClass: either(InMemoryWalletRepository, FirebaseWalletRepository),
+});
+
+const PASSENGER_WALLET_REPOSITORY = "PASSENGER_WALLET_REPOSITORY";
+
+container.register<PassengerWalletRepository>(PASSENGER_WALLET_REPOSITORY, {
+  useClass: either(
+    InMemoryPassengerWalletRepository,
+    FirebasePassengerWalletRepository,
+  ),
 });
 
 const CASHOUT_REQUEST_REPOSITORY = "CASHOUT_REQUEST_REPOSITORY";

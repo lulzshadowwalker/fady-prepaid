@@ -72,7 +72,8 @@ import { toast } from "@/hooks/use-toast";
 import { usePassengerCashoutRequest } from "@/context/passenger-cashout-request-context";
 
 export function CashoutRequestsTable() {
-  const { requests, approveRequest, rejectRequest } = usePassengerCashoutRequest();
+  const { requests, approveRequest, rejectRequest } =
+    usePassengerCashoutRequest();
 
   const columns = React.useMemo<ColumnDef<PassengerCashoutRequest>[]>(
     () => [
@@ -81,7 +82,9 @@ export function CashoutRequestsTable() {
         id: "passengerName",
         header: () => <div className="text-start">Passenger</div>,
         cell: ({ row }) => (
-          <div className="lowercase text-start">{row.original.passenger?.name}</div>
+          <div className="lowercase text-start">
+            {row.original.passenger?.name}
+          </div>
         ),
       },
       {
@@ -92,7 +95,7 @@ export function CashoutRequestsTable() {
           const balance = row.original?.passenger?.walletSummary!.actualBalance;
           return (
             <div className="text-start font-medium">
-              {balance ? formatAmount(balance) : null}
+              {formatAmount(balance ?? 0)}
             </div>
           );
         },
@@ -105,7 +108,7 @@ export function CashoutRequestsTable() {
           const balance = row.original?.passenger?.walletSummary!.addedBalance;
           return (
             <div className="text-start font-medium">
-              {balance ? formatAmount(balance) : null}
+              {formatAmount(balance ?? 0)}
             </div>
           );
         },
@@ -137,7 +140,8 @@ export function CashoutRequestsTable() {
           </div>
         ),
         cell: ({ row }) => {
-          const status = row.getValue<PassengerCashoutRequest["status"]>("status");
+          const status =
+            row.getValue<PassengerCashoutRequest["status"]>("status");
           return <StatusBadge status={status} />;
         },
       },
@@ -196,7 +200,7 @@ export function CashoutRequestsTable() {
                   <div className="grid flex-1 auto-rows-min gap-6">
                     <div>
                       <div className="tracking-wide text-neutral-600 font-medium">
-                       passenger
+                        passenger
                       </div>
                       <div className="text-sm">{passenger?.name}</div>
                     </div>
@@ -390,14 +394,14 @@ export function CashoutRequestsTable() {
         },
       },
     ],
-    [approveRequest, rejectRequest],
+    [approveRequest, rejectRequest]
   );
 
   const [sorting, setSorting] = React.useState<SortingState>([
     { id: "createdAt", desc: true },
   ]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    [],
+    []
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -470,7 +474,7 @@ export function CashoutRequestsTable() {
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext(),
+                          header.getContext()
                         )}
                   </TableHead>
                 ))}
@@ -488,7 +492,7 @@ export function CashoutRequestsTable() {
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext(),
+                        cell.getContext()
                       )}
                     </TableCell>
                   ))}
@@ -586,8 +590,8 @@ function ApproveDialog({
         <DialogHeader>
           <DialogTitle>Approve Cashout Request</DialogTitle>
           <DialogDescription>
-            Enter the actual amount sent to the passenger. It must be less than or
-            equal to the requested amount.
+            Enter the actual amount sent to the passenger. It must be less than
+            or equal to the requested amount.
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-2">
